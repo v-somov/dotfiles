@@ -1,0 +1,10 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =8
+let g:netrw_dirhist_1='/Volumes/Fentury/ios-fentury-v2/coverage_reports'
+let g:netrw_dirhist_2='/Volumes/Fentury/ios-fentury-v2'
+let g:netrw_dirhist_3='/Volumes/Fentury/ios-fentury-v2/Pods'
+let g:netrw_dirhist_4='/Volumes/Fentury/ios-fentury-v2'
+let g:netrw_dirhist_5='/Volumes/Fentury/ios-fentury'
+let g:netrw_dirhist_6='/Volumes/Fentury/ios-fentury/.config'
+let g:netrw_dirhist_7='/Volumes/Fentury/ios-fentury'
+let g:netrw_dirhist_8='/Users/myair/dotfiles'

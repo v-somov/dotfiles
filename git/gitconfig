@@ -1,0 +1,23 @@
+[color]
+	ui = true
+[user]
+	name = vlad1803
+	email = vlad.somov93@gmail.com
+[core]
+	excludesfile = /Users/myair/.gitignore_global
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[filter "lfs"]
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+	required = true
+[push]
+	default = simple
+[pager]
+        diff = /Users/myair/Documents/diff-highlight/diff-highlight | less
+        log = /Users/myair/Documents/diff-highlight/diff-highlight | less
+        show = /Users/myair/Documents/diff-highlight/diff-highlight | less

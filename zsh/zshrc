@@ -100,8 +100,6 @@ export EDITOR='vim'
   alias rails_mobile_test="RAILS_ENV=mobile_test DATABASE=ios_test rails s -p8082"
   alias test_console="DEVICE_TARGET='iPhone 6s (9.2)' rake console"
   alias feature_test="bundle exec cucumber"
-  alias gps="git pull salt master"
-  alias gpf="git pull fentury master"
 
   alias afind="ack -il"
   alias fproc="ps aux| grep"
@@ -111,16 +109,8 @@ export EDITOR='vim'
   alias ssh_pi="ssh vlad@188.237.88.85"
   alias ssh_jenkins="ssh jenkins@192.168.20.72"
 #Web Bookmarks
-  alias mgrs="open https://git.saltedge.com/fentury/ios-fentury/merge_requests"
-  alias builds="open -a safari https://git.saltedge.com/fentury/ios-fentury/builds"
-  alias issues="open https://git.saltedge.com/fentury/ios-fentury/issues\?assignee_id=19"
   alias v1go="open https://git.saltedge.com/fentury/ios-fentury"
   alias v2go="open https://git.saltedge.com/fentury/ios-fentury-v2"
-#fastline alias
-  #alias fastlane="/Users/myair/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/fastlane-1.18.0/bin/fastlane"
-  #alias sigh="~/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/sigh-0.10.3/bin/sigh"
-  #alias frameit=" ~/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/frameit-2.1.0/bin/frameit"
-  #alias pem="~/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/pem-0.7.1/bin/pem"
   
 #Syntax Highlighting enable
   source /Users/myair/Developer/Helpful\ Stuff/zsh-syntax-highlighting-master/zsh-syntax-highlighting.plugin.zsh
@@ -180,3 +170,5 @@ pk () {
  fi
 
 }
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

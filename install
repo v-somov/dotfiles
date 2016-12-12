@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# antigen
+cd ~ && git clone https://github.com/zsh-users/antigen.git .antigen
+
+# brew
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew install zsh
+brew install wget
+
+# oh my zsh
+curl https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
+
+#fuzzy finder
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install
+
+#links
+
+ln -sf ~/dotfiles/git/gitconfig     ~/.gitconfig
+ln -sf ~/dotfiles/git/gitignore     ~/.gitignore
+
+ln -sf ~/dotfiles/vimconfig/vimrc   ~/.vimrc
+ln -sf ~/dotfiles/vimconfig/vim     ~/.vim
+ln -sf ~/dotfiles/vimconfig/xvimrc  ~/.xvimrc
+
+ln -sf ~/dotfiles/zsh/zshrc         ~/.zshrc
+
+# vundle
+git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
+# Downloads
+wget -O ~/Downloads/iTerm.zip https://iterm2.com/downloads/stable/latest
