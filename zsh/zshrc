@@ -50,7 +50,6 @@ ZSH_THEME="avit"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git jump ruby z last-working-dir wd)
-
 # User configuration
 
 export PATH="/Users/myair/.rbenv/shims:/usr/local/bin:/usr/local/bin/git:/usr/bin:/bin:/usr/sbin:/sbin:/Users/myair/.rvm/bin:/usr/local/bin/"
@@ -91,6 +90,7 @@ export EDITOR='vim'
   alias vimrc="vim ~/.vimrc"
   alias ohmyzsh="open ~/.oh-my-zsh"
   alias xvimrc="vim ~/.xvimrc"
+  alias vimconfig="vim ~/dotfiles/vimconfig"
 
   alias be="bundle exec"
 
