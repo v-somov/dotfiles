@@ -27,5 +27,9 @@ ln -sf ~/dotfiles/zsh/zshrc         ~/.zshrc
 # vundle
 git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
+#plug for nvim
+curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
 # Downloads
 wget -O ~/Downloads/iTerm.zip https://iterm2.com/downloads/stable/latest

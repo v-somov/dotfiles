@@ -1,31 +1,14 @@
 # Path to your oh-my-zsh installation.
 export ZSH=/Users/myair/.oh-my-zsh
 
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
-#autoload -U promptinit; promptinit
-#prompt pure
-#ZSH_THEME="pure"
 ZSH_THEME="gitster"
-#ZSH_THEME="avit"
-#ZSH_THEME="norm"
 
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
 plugins=(git ruby z last-working-dir wd)
+
 # User configuration
 
 export PATH="/Users/myair/.rbenv/shims:/usr/local/bin:/usr/local/bin/git:/usr/bin:/bin:/usr/sbin:/sbin:/Users/myair/bin:/usr/local/bin/$HOME/.cargo/bin:$PATH"
 export PATH="/usr/local/mysql/bin:$PATH"
-export ANDROID_HOME=${HOME}/Library/Android/sdk
-export PATH=${PATH}:${ANDROID_HOME}/tools
-export PATH=${PATH}:${ANDROID_HOME}/platform-tools
-#export PATH="/Users/myair/Downloads/infer-osx-v0.4.0/infer/bin:$PATH"
-# export MANPATH="/usr/local/man:$MANPATH"
 
 #GO
 export PATH=$PATH:/usr/local/go/bin
@@ -35,29 +18,8 @@ export PATH=$PATH:$GOPATH/bin
 
 source $ZSH/oh-my-zsh.sh
 
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
 export EDITOR='nvim'
 export REACT_EDITOR='atom'
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/dsa_id"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-#
-# Feed the output of ag into fzf
-#ag -g "" | fzf
-
-# Setting ag as the default source for fzf
 
 #_gen_fzf_default_opts() {
   #local base03="234"
@@ -93,17 +55,12 @@ export REACT_EDITOR='atom'
 
 #_gen_fzf_default_opts
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-  #source ~/.fzf.zsh
 export FZF_DEFAULT_OPTS='--color 16,info:6,hl+:1,fg+:10'
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
- #Now fzf (w/o pipe) will use ag instead of find
-#fzf
+#Now fzf (w/o pipe) will use rg instead of find
 
-# To apply the command to CTRL-T as well
-
-# Example aliases
 # Golang alias
   alias golist="go list -f '{{join .Deps \"\n\"}}' | xargs go list -f '{{if not .Standard}}{{.ImportPath}}{{end}}'"
 #application alias
@@ -118,26 +75,24 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
   alias nvimrc="nvim ~/.config/nvim/init.vim"
 
   alias be="bundle exec"
-#fentury alias
   alias fproc="ps aux| grep"
   alias kill_all="pkill -9 -f"
   
-#Syntax Highlighting enable
+#Syntax Highlighting enable 
+#Path to installation 
   source /Users/myair/Developer/Helpful\ Stuff/zsh-syntax-highlighting-master/zsh-syntax-highlighting.plugin.zsh
 
-#  History
+# History
 # Keep history in this file
   export HISTFILE=~/.zsh_history
 # Max history command size
   export HISTCONTROL=ignoredups:erasedups  
   export HISTSIZE=100000                   
   export HISTFILESIZE=100000    
-  #export HISTSIZE=10000
   export SAVEHIST=$HISTSIZE
 # enable histroy
   setopt APPEND_HISTORY
 # remove repeated,empty, and whitespace commands
-  #setopt HIST_IGNORE_ALL_DUPS
   setopt HIST_IGNORE_SPACE
   setopt HIST_REDUCE_BLANKS
 
@@ -182,5 +137,4 @@ pk () {
  else
  echo "'$1' is not a valid file"
  fi
-
 }
