@@ -5,54 +5,25 @@ export ZSH=/Users/myair/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="avit"
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion. Case
-# sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
-
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
+#autoload -U promptinit; promptinit
+#prompt pure
+#ZSH_THEME="pure"
+ZSH_THEME="gitster"
+#ZSH_THEME="avit"
+#ZSH_THEME="norm"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git jump ruby z last-working-dir wd)
+plugins=(git ruby z last-working-dir wd)
 # User configuration
 
-export PATH="/Users/myair/.rbenv/shims:/usr/local/bin:/usr/local/bin/git:/usr/bin:/bin:/usr/sbin:/sbin:/Users/myair/.rvm/bin:/usr/local/bin/"
+export PATH="/Users/myair/.rbenv/shims:/usr/local/bin:/usr/local/bin/git:/usr/bin:/bin:/usr/sbin:/sbin:/Users/myair/bin:/usr/local/bin/$HOME/.cargo/bin:$PATH"
+export PATH="/usr/local/mysql/bin:$PATH"
+export ANDROID_HOME=${HOME}/Library/Android/sdk
+export PATH=${PATH}:${ANDROID_HOME}/tools
+export PATH=${PATH}:${ANDROID_HOME}/platform-tools
 #export PATH="/Users/myair/Downloads/infer-osx-v0.4.0/infer/bin:$PATH"
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -68,7 +39,8 @@ source $ZSH/oh-my-zsh.sh
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-export EDITOR='vim'
+export EDITOR='nvim'
+export REACT_EDITOR='atom'
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -81,49 +53,91 @@ export EDITOR='vim'
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 #
+#
+# Feed the output of ag into fzf
+#ag -g "" | fzf
+
+# Setting ag as the default source for fzf
+
+#_gen_fzf_default_opts() {
+  #local base03="234"
+  #local base02="235"
+  #local base01="240"
+  #local base00="241"
+  #local base0="244"
+  #local base1="245"
+  #local base2="254"
+  #local base3="230"
+  #local yellow="136"
+  #local orange="166"
+  #local red="160"
+  #local magenta="125"
+  #local violet="61"
+  #local blue="33"
+  #local cyan="37"
+  #local green="64"
+
+  ## Comment and uncomment below for the light theme.
+
+  ## Solarized Dark color scheme for fzf
+  ##export FZF_DEFAULT_OPTS="
+    ##--color fg:-1,bg:-1,hl:$blue,fg+:$base2,bg+:$base02,hl+:$blue
+    ##--color info:$yellow,prompt:$yellow,pointer:$base3,marker:$base3,spinner:$yellow
+  ##"
+  ### Solarized Light color scheme for fzf
+  #export FZF_DEFAULT_OPTS="
+   #--color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
+   #--color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
+  #"
+#}
+
+#_gen_fzf_default_opts
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+  #source ~/.fzf.zsh
+export FZF_DEFAULT_OPTS='--color 16,info:6,hl+:1,fg+:10'
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+ #Now fzf (w/o pipe) will use ag instead of find
+#fzf
+
+# To apply the command to CTRL-T as well
+
 # Example aliases
+# Golang alias
+  alias golist="go list -f '{{join .Deps \"\n\"}}' | xargs go list -f '{{if not .Standard}}{{.ImportPath}}{{end}}'"
 #application alias
   alias vim='/usr/local/bin/vim'
   alias filetree="ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/ /' -e 's/-/|/'"
 #config alias
-  alias zshrc="vim ~/.zshrc"
-  alias vimrc="vim ~/.vimrc"
+  alias zshrc="nvim ~/.zshrc"
+  alias vimrc="nvim ~/.vimrc"
   alias ohmyzsh="open ~/.oh-my-zsh"
-  alias xvimrc="vim ~/.xvimrc"
-  alias vimconfig="vim ~/dotfiles/vimconfig"
+  alias xvimrc="nvim ~/.xvimrc"
+  alias vimconfig="nvim ~/dotfiles/vimconfig"
+  alias nvimrc="nvim ~/.config/nvim/init.vim"
 
   alias be="bundle exec"
-
-  alias myplayground="open ~/Developer/MyPlayground.playground"
-  alias screenshots="open /Users/myair/Dropbox/Screenshots"
 #fentury alias
-  alias rails_mobile_test="RAILS_ENV=mobile_test DATABASE=ios_test rails s -p8082"
-  alias test_console="DEVICE_TARGET='iPhone 6s (9.2)' rake console"
-  alias feature_test="bundle exec cucumber"
-
-  alias afind="ack -il"
   alias fproc="ps aux| grep"
   alias kill_all="pkill -9 -f"
-#ssh alias
-  alias mount_pi="sshfs vlad@188.237.77.85: Developer/rasberryPi/"
-  alias ssh_pi="ssh vlad@188.237.88.85"
-  alias ssh_jenkins="ssh jenkins@192.168.20.72"
-#Web Bookmarks
-  alias v1go="open https://git.saltedge.com/fentury/ios-fentury"
-  alias v2go="open https://git.saltedge.com/fentury/ios-fentury-v2"
   
 #Syntax Highlighting enable
   source /Users/myair/Developer/Helpful\ Stuff/zsh-syntax-highlighting-master/zsh-syntax-highlighting.plugin.zsh
+
 #  History
 # Keep history in this file
   export HISTFILE=~/.zsh_history
 # Max history command size
-  export HISTSIZE=10000
+  export HISTCONTROL=ignoredups:erasedups  
+  export HISTSIZE=100000                   
+  export HISTFILESIZE=100000    
+  #export HISTSIZE=10000
   export SAVEHIST=$HISTSIZE
 # enable histroy
   setopt APPEND_HISTORY
 # remove repeated,empty, and whitespace commands
-  setopt HIST_IGNORE_ALL_DUPS
+  #setopt HIST_IGNORE_ALL_DUPS
   setopt HIST_IGNORE_SPACE
   setopt HIST_REDUCE_BLANKS
 
@@ -170,5 +184,3 @@ pk () {
  fi
 
 }
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

@@ -8,9 +8,13 @@ set hls
 set backspace=indent,eol,start
 set mouse=a
 set clipboard=unnamed
+set number
 set relativenumber
 
 let mapleader = "\<Space>"
+
+"Disable preview window on top for YouAutoCompleteMe
+set completeopt-=preview
 
 let g:airline_powerline_fonts=1
 let g:airline_theme='tomorrow'
@@ -21,7 +25,10 @@ au FileType swift setl sw=4 sts=4 ts=4
 
 autocmd QuickFixCmdPost *grep* cwindow
 
+"Ctrp
+set wildignore+=*/tmp/*,*/vendor/*,*.so,*.swp,*.zip
 set expandtab
+" This is the default extra key bindings
 
 " Undo
 set undofile
@@ -35,9 +42,8 @@ source ~/dotfiles/vimconfig/fastctrlp.vim
 source ~/dotfiles/vimconfig/mappings.vim
 source ~/dotfiles/vimconfig/plugins.vim
 source ~/dotfiles/vimconfig/visual-selection.vim
-source ~/dotfiles/vimconfig/tab-wrapper.vim
-
-"Auto reload vimrc
+"source ~/dotfiles/vimconfig/tab-wrapper.vim
+"source ~/dotfiles/vimconfig/fzf.vim
 "augroup reload_vimrc " {
     "autocmd!
     "autocmd BufWritePost $MYVIMRC source $MYVIMRC

@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# antigen
-cd ~ && git clone https://github.com/zsh-users/antigen.git .antigen
-
 # brew
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 brew install zsh
@@ -23,6 +20,7 @@ ln -sf ~/dotfiles/git/gitignore     ~/.gitignore_global
 ln -sf ~/dotfiles/vimconfig/vimrc   ~/.vimrc
 ln -sf ~/dotfiles/vimconfig/vim     ~/.vim
 ln -sf ~/dotfiles/vimconfig/xvimrc  ~/.xvimrc
+ln -sf ~/dotfiles/nvim/init.vim     ~/.config/nvim/init.vim
 
 ln -sf ~/dotfiles/zsh/zshrc         ~/.zshrc
 

@@ -2,8 +2,10 @@ nnoremap <Leader>w :w<CR>
 nnoremap <Leader>q :wq<CR>
 
 nnoremap \ :NERDTreeToggle<CR>  
-nnoremap <C-l> :vertical resize +10<CR>
-nnoremap <C-h> :vertical resize -10<CR>
+map <leader>r :NERDTreeFind<cr>
+
+autocmd VimEnter * nnoremap <C-l> :vertical resize +10<CR>
+autocmd VimEnter * nnoremap <C-h> :vertical resize -10<CR>
 
 nnoremap <silent> <C-L> :noh<CR>
 nmap K <Plug>(devdocs-under-cursor)
@@ -25,7 +27,8 @@ map <M-K> <C-W>j<C-W>_
 map <M-K> <C-W>k<C-W>_
 
 "swap words
-:nnoremap <silent> gw "_yiw:s/\(\%#\w\+\)\(\W\+\)\(\w\+\)/\3\2\1/<CR><c-o><c-l>:nohlsearch<CR>"
+nnoremap <silent> gw "_yiw:s/\(\%#\w\+\)\(\W\+\)\(\w\+\)/\3\2\1/<CR><c-o><c-l>:nohlsearch<CR>"
+noremap <silent><Leader>/ :nohls<CR>
 
 " Visual mode pressing * or # searches for the current selection
 " " Super useful! From an idea by Michael Naumann
@@ -33,12 +36,12 @@ vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
 vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 
 " Move a line of text using CTRL+[jk]
-nnoremap <C-j> :m .+1<CR>
-nnoremap <C-k> :m .-2<CR>
-inoremap <C-j> <Esc>:m .+1<CR>==gi
-inoremap <C-k> <Esc>:m .-2<CR>==gi
-vnoremap <C-j> :m '>+1<CR>gv=gv
-vnoremap <C-k> :m '<-2<CR>gv=gv
+"nnoremap <C-j> :m .+1<CR>
+"nnoremap <C-k> :m .-2<CR>
+"inoremap <C-j> <Esc>:m .+1<CR>==gi
+"inoremap <C-k> <Esc>:m .-2<CR>==gi
+"vnoremap <C-j> :m '>+1<CR>gv=gv
+"vnoremap <C-k> :m '<-2<CR>gv=gv
 
 "Paste yanked text
 noremap <Leader>p "0p

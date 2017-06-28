@@ -1,4 +1,7 @@
-"let g:ctrlp_custom_ignore = '\v[\/]\.(.build|Packages)$'
+"let g:ctrlp_custom_ignore = {
+  "\ 'dir':  '\.git$\|\.hg$\|\.svn$\|\.yardoc\|public\/images\|public\/system\|data\|log\|tmp\|vendor$',
+  "\ 'file': '\.swp$\|\.so$\|\.zip$'
+  "\ }
 let g:ctrlp_use_caching = 0
 if executable('ag')
   set grepprg=ag\ --nogroup\ --nocolor
