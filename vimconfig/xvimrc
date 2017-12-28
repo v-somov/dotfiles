@@ -46,10 +46,10 @@ map <C-p> :xccmd revealInProjectNavigator<CR>
 "nmap <space>j :xccmd toggleDebuggerVisibility<CR>
 "nmap <space>l :xccmd toggleUtilitiesVisibility<CR>
 "
-map ,fa :xccmd foldAllMethods<CR>
-map ,ua :xccmd unfoldAllMethods<CR>
-map ,fc :xccmd foldAllComments<CR>
-map ,uc :xccmd unfoldAllComments<CR>
+"map ,fa :xccmd foldAllMethods<CR>
+"map ,ua :xccmd unfoldAllMethods<CR>
+"map ,fc :xccmd foldAllComments<CR>
+"map ,uc :xccmd unfoldAllComments<CR>
 
 nmap <C-h> :xccmd selectPreviousTab<CR>
 nmap <C-l> :xccmd selectNextTab<CR>

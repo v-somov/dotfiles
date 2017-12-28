@@ -1,16 +1,6 @@
-syntax enable
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-set termguicolors
-
-"set background=light
-"colorscheme solarized8_light_flat
-"
-"set background=dark
-"colorscheme gruvbox
-
 set nocompatible              " be iMproved, required
 filetype off                  " required
-set laststatus=2
+"set laststatus=2
 set hls
 set backspace=indent,eol,start
 set mouse=a
@@ -19,19 +9,16 @@ set number
 set relativenumber
 set ignorecase
 set smartcase
+set nofoldenable
 
 let mapleader = "\<Space>"
-
-let g:airline_powerline_fonts=1
-"let g:airline_theme='solarized'  
-"let g:airline_theme='tomorrow'
 
 set sw=2 ts=2 sts=2
 au FileType go setl sw=4 sts=4 ts=4
 au FileType swift setl sw=4 sts=4 ts=4
 
 "Ctrp
-set wildignore+=*/tmp/*,*/vendor/*,*.so,*.swp,*.zip
+"set wildignore+=*/tmp/*,*/vendor/*,*.so,*.swp,*.zip
 set expandtab
 
 " Undo
@@ -40,29 +27,26 @@ set undodir=$HOME/.vim/undo
 
 call plug#begin('~/.config/nvim/plugged')
 
+Plug 'mhinz/vim-startify'
+
+Plug 'keith/swift.vim', { 'for': 'swift' }
+
 Plug 'trevordmiller/nova-vim'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 
-Plug 'rstacruz/sparkup', {'rtp': 'vim/'}
 Plug 'junegunn/vim-easy-align'
 Plug 'foosoft/vim-argwrap'
 
-Plug 'tommcdo/vim-lion'
-let g:lion_squeeze_spaces = 1
-"
 "tpope
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-jdaddy'
 
-Plug 'bling/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'The-NERD-Commenter'
+Plug 'scrooloose/nerdcommenter'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'dkprice/vim-easygrep'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-easytags'
 Plug 'haya14busa/incsearch.vim'
@@ -71,44 +55,83 @@ Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 Plug 'terryma/vim-expand-region'
 Plug 'majutsushi/tagbar'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'scrooloose/syntastic'
+
+Plug 'w0rp/ale'
+Plug 'tomlion/vim-solidity'
 
 Plug 'junegunn/goyo.vim'
 nnoremap <leader>gg :Goyo<CR>
 
-"Rust
-Plug 'rust-lang/rust.vim'
-Plug 'cespare/vim-toml'
+"rust
+Plug 'rust-lang/rust.vim', { 'for': 'rust' }
+Plug 'cespare/vim-toml', { 'for': 'rust' }
 
 "JS
-Plug 'mxw/vim-jsx'
-let g:jsx_ext_required = 0 " Allow JSX in normal JS files
-let g:syntastic_javascript_checkers = ['eslint']
+Plug 'mxw/vim-jsx', { 'for': ['javascript', 'javascript.jsx'] }
+"let g:jsx_ext_required = 0 " Allow JSX in normal JS files
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install && npm install -g tern', 'for': ['javascript', 'javascript.jsx'] }
 Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
 Plug 'pangloss/vim-javascript', { 'for': ['javascript', 'javascript.jsx'] }
 
-Plug 'fatih/vim-go', { 'tag': '*' }
-Plug 'nsf/gocode'
+Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'for': 'go' }
+Plug 'nsf/gocode', { 'for': 'go' }
 if has('nvim')
  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
- Plug 'zchee/deoplete-go', {'build': {'unix': 'make'}}
- Plug 'sebastianmarkow/deoplete-rust'
- Plug 'jodosha/vim-godebug' " Debugger integration via delve
+ Plug 'zchee/deoplete-go', {'build': {'unix': 'make'}, 'for': 'go' }
+ Plug 'jodosha/vim-godebug', { 'for': 'go' } " Debugger integration via delve
+ Plug 'zchee/deoplete-jedi'
 endif
+
+"Python
+"Plug 'python-mode/python-mode', { 'branch': 'develop' }
+"let g:pymode_python = 'python3'
+"let g:pymode_rope_completion = 1
+"let g:pymode_syntax = 1
+"let g:pymode_rope_complete_on_dot = 0
+"let g:pymode_lint = 0
+"let g:pymode_indent = 1
+Plug 'hdima/python-syntax'
+let python_highlight_all = 1
+Plug 'hkupty/iron.nvim', { 'do': ':UpdateRemotePlugins' }
+
+Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
+map <C-Y> :call yapf#YAPF()<cr>
+imap <C-Y> <c-o>:call yapf#YAPF()<cr><Paste>
+
+"Ruby
+"Plug 'tpope/vim-rails'
+"Plug 'thoughtbot/vim-rspec'
 
 " Initialize plugin system
 call plug#end()
 
-"Deoplete Rust
-let g:deoplete#sources#rust#racer_binary='/Users/myair/.cargo/bin/racer'
-let g:deoplete#sources#rust#rust_source_path='/Users/myair/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
+"ale
+" Error and warning signs.
+let g:ale_sign_error = '⤫'
+let g:ale_sign_warning = '⚠'
 
-let g:rustfmt_autosave = 1
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_enter = 0
+
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_fixers = {
+\   'go': ['gofmt', 'goimports'],
+\}
+let g:ale_fix_on_save = 1
+
+" RSpec.vim mappings
+map <Leader>s :call RunCurrentSpecFile()<CR>
+map <Leader>l :call RunLastSpec()<CR>
+map <Leader>a :call RunAllSpecs()<CR>
+let g:rspec_command = "!bundle exec rspec -f d -c {spec}"
 
 "GO
-au FileType go nmap <Leader>gor :GoRun<CR>
+au FileType go nmap <Leader>gor <Plug>(go-run-vertical)
 au FileType go nmap <Leader>gb  :GoBuild<CR>
 au FileType go nmap <Leader>gi :GoInstall<CR>
 au FileType go nmap <leader>gt :GoTest<CR>
@@ -125,7 +148,11 @@ let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
+let g:go_auto_sameids = 1
+let g:go_auto_type_info = 1
+let g:go_term_enabled = 1
 
+"Deoplete
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_ignore_case = 1
 let g:deoplete#enable_smart_case = 1
@@ -159,19 +186,21 @@ inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 "Disable preview window on top for YouAutoCompleteMe
 set completeopt-=preview
 
+nnoremap <leader><leader> :e #<CR>
+
 "Mappings
 nnoremap <Leader>w :w<CR>
 nnoremap <Leader>q :wq<CR>
+nnoremap <Leader>x :q!<CR>
 nnoremap <leader>h :hide<CR>  
-nnoremap <leader>t :term<CR>
+nnoremap <leader>o :only<CR>  
+nnoremap <leader>t :vsplit term://$SHELL<CR>
 
 nnoremap \ :NERDTreeToggle<CR>  
 map <leader>r :NERDTreeFind<cr>
 
-autocmd VimEnter * nnoremap <C-l> :vertical resize +10<CR>
-
-nnoremap <silent> <C-L> :noh<CR>
-nmap K <Plug>(devdocs-under-cursor)
+"nnoremap <silent> <C-L> :noh<CR>
+"nmap K <Plug>(devdocs-under-cursor)
 
 nmap <Leader>r<CR> *:%s///g<left><left>
 nmap <Leader>rc<CR> *:%s///gc<left><left><left>
@@ -233,8 +262,8 @@ nnoremap <leader>ch :History:<CR>
 "using rg for find in project
 let g:rg_command = '
   \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
-  \ -g "*.{js,json,rs,go,rb,swift}"
-  \ -g "!{.git,node_modules,vendor,log,swp}/*" '
+  \ -g "*.{js,json,rs,go,rb,swift,scss}"
+  \ -g "!{.git,node_modules,vendor,log,swp,tmp}/*" '
 command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1, <bang>0)
 nnoremap <leader>f :F<CR>
 
@@ -257,18 +286,6 @@ let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 
-"Syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_mode_map = { 'passive_filetypes': ['html', 'css', 'leaf'] }
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
 "Visual Selection
 function! VisualSelection(direction, extra_filter) range
     let l:saved_reg = @"
@@ -289,6 +306,7 @@ endfunction
 
 au BufRead,BufNewFile Podfile set filetype=ruby
 au BufRead,BufNewFile Dangerfile set filetype=ruby
+au BufRead,BufNewFile Fastfile set filetype=ruby
 
 au BufRead,BufNewFile *.gohtml set filetype=html
 au BufRead,BufNewFile *.pbxproj set syntax=xml
@@ -296,8 +314,42 @@ au BufRead,BufNewFile *.pbxproj set syntax=xml
 autocmd BufWinEnter,WinEnter term://* startinsert
 autocmd VimResized * wincmd =
 
+augroup filetype
+  au! BufRead,BufNewFile *.proto setfiletype proto
+augroup end
+
 syntax enable
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 set termguicolors
 set background=dark
 colorscheme nova
+
+" Move visual block
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
+" Search result to the center
+nnoremap n nzz
+nnoremap N Nzz
+
+noremap <up>    <C-W>+
+noremap <down>  <C-W>-
+noremap <left>  3<C-W><
+noremap <right> 3<C-W>>
+
+" Set status line
+hi slred guifg=#9D86DE guibg=#232526 gui=bold
+hi slgrn guifg=#A6E22E guibg=#232526 gui=bold
+hi slorg guifg=#7AA8E1 guibg=#232526 gui=bold
+hi slblu guifg=#9D86DE guibg=#232526 gui=bold
+
+set statusline=%#slorg#%{getcwd()}%=%#slred#\ PERM=%{getfperm(expand('%'))}\ FORMAT=%{&ff}\ TYPE=%Y\ SPELL=%{&spelllang}\ %#slgrn#\ LINE=%l/%L(%p%%)\ COL=%v\ |
+
+" Highlight merge conflict markers
+match Todo '\v^(\<|\=|\>){7}([^=].+)?$'
+
+" Jump to next/previous merge conflict marker
+nnoremap <silent> ]c /\v^(\<\|\=\|\>){7}([^=].+)?$<CR>
+nnoremap <silent> [c ?\v^(\<\|\=\|\>){7}([^=].+)\?$<CR>
+
+let g:netrw_liststyle=3

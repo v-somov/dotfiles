@@ -40,7 +40,7 @@ hs.hotkey.bind({"cmd", "alt"}, "Up", function()
 end)
 
 hs.hotkey.bind({"cmd", "alt"}, "Down", function()
-  local win = hs.window.focusedWindow()
+  local win = window.focusedWindow()
   local f = win:frame()
   local screen = win:screen()
   local max = screen:frame()
@@ -52,10 +52,10 @@ hs.hotkey.bind({"cmd", "alt"}, "Down", function()
   win:setFrame(f)
 end)
 
-hs.hotkey.bind({"cmd", "alt"}, "f", function()
+function toggleFullScreen(s)
   local win = window.focusedWindow()
   local f = win:frame()
-  local screen = win:screen()
+  local screen = s or win:screen()
   local max = screen:frame()
 
   f.x = max.x
@@ -63,7 +63,9 @@ hs.hotkey.bind({"cmd", "alt"}, "f", function()
   f.w = max.w
   f.h = max.h
   win:setFrame(f)
-end)
+end
+
+hs.hotkey.bind({"cmd", "alt"}, "f", toggleFullScreen)
 
 hs.hotkey.bind({"cmd", "alt"}, "c", function()
   local win = window.focusedWindow()
@@ -77,3 +79,16 @@ hs.hotkey.bind({"cmd", "alt"}, "c", function()
   f.h = max.h / 1.5
   win:setFrame(f)
 end)
+
+function moveWindowNext()
+  local s = hs.screen.mainScreen():next()
+  toggleFullScreen(s)
+end
+
+function moveWindowPrev()
+  local s = hs.screen.mainScreen():previous()
+  toggleFullScreen(s)
+end
+
+hs.hotkey.bind({"ctrl", "cmd"}, "up", moveWindowNext)
+hs.hotkey.bind({"ctrl", "cmd"}, "down", moveWindowPrev)

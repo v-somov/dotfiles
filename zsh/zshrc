@@ -1,9 +1,9 @@
 # Path to your oh-my-zsh installation.
 export ZSH=/Users/myair/.oh-my-zsh
 
-ZSH_THEME="gitster"
+ZSH_THEME=gitster
 
-plugins=(git ruby z last-working-dir wd)
+plugins=(git ruby z last-working-dir wd vi-mode)
 
 # User configuration
 
@@ -12,8 +12,8 @@ export PATH="/usr/local/mysql/bin:$PATH"
 
 #GO
 export PATH=$PATH:/usr/local/go/bin
-export GOPATH=$HOME/Developer/golang
-export GOBIN=$HOME/Developer/golang/bin
+export GOPATH=$HOME/Developer/go
+export GOBIN=$HOME/Developer/go/bin
 export PATH=$PATH:$GOPATH/bin
 
 source $ZSH/oh-my-zsh.sh
@@ -55,12 +55,34 @@ export REACT_EDITOR='atom'
 
 #_gen_fzf_default_opts
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_OPTS='--color 16,info:6,hl+:1,fg+:10'
-export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'
+export FZF_DEFAULT_OPTS="--color 16,info:6,hl+:1,fg+:10"
+export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules,tmp,vendor}/*" 2> /dev/null'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 #Now fzf (w/o pipe) will use rg instead of find
-
+#
+# fshow - git commit browser (enter for show, ctrl-d for diff, ` toggles sort)
+fshow() {
+  local out shas sha q k
+  while out=$(
+      git log --graph --color=always \
+          --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+      fzf --ansi --multi --no-sort --reverse --query="$q" \
+          --print-query --expect=ctrl-d --toggle-sort=\`); do
+    q=$(head -1 <<< "$out")
+    k=$(head -2 <<< "$out" | tail -1)
+    shas=$(sed '1,2d;s/^[^a-z0-9]*//;/^$/d' <<< "$out" | awk '{print $1}')
+    [ -z "$shas" ] && continue
+    if [ "$k" = ctrl-d ]; then
+      git diff --color=always $shas | less -R
+    else
+      for sha in $shas; do
+        git show --color=always $sha | less -R
+      done
+    fi
+  done
+}
 # Golang alias
   alias golist="go list -f '{{join .Deps \"\n\"}}' | xargs go list -f '{{if not .Standard}}{{.ImportPath}}{{end}}'"
 #application alias
@@ -78,6 +100,7 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
   alias fproc="ps aux| grep"
   alias kill_all="pkill -9 -f"
   
+  alias ngrok="./ngrok"
 #Syntax Highlighting enable 
 #Path to installation 
   source /Users/myair/Developer/Helpful\ Stuff/zsh-syntax-highlighting-master/zsh-syntax-highlighting.plugin.zsh
