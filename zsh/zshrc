@@ -1,13 +1,13 @@
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/myair/.oh-my-zsh
+export ZSH=/Users/vladsomov/.oh-my-zsh
 
-ZSH_THEME=gitster
+#ZSH_THEME=gitster
+ZSH_THEME=refined
 
-plugins=(git ruby z last-working-dir wd vi-mode)
+plugins=(git ruby z last-working-dir wd vi-mode zsh-syntax-highlighting)
 
 # User configuration
-
-export PATH="/Users/myair/.rbenv/shims:/usr/local/bin:/usr/local/bin/git:/usr/bin:/bin:/usr/sbin:/sbin:/Users/myair/bin:/usr/local/bin/$HOME/.cargo/bin:$PATH"
+export PATH="/Users/vladsomov/.rbenv/shims:/usr/local/bin:/usr/local/bin/git:/usr/bin:/bin:/usr/sbin:/sbin:/Users/vladsomov/bin:/usr/local/bin/$HOME/.cargo/bin:$PATH"
 export PATH="/usr/local/mysql/bin:$PATH"
 
 #GO
@@ -16,12 +16,13 @@ export GOPATH=$HOME/Developer/go
 export GOBIN=$HOME/Developer/go/bin
 export PATH=$PATH:$GOPATH/bin
 
+export PATH="$HOME/anaconda3/bin:$PATH"
+
 source $ZSH/oh-my-zsh.sh
 
 export EDITOR='nvim'
-export REACT_EDITOR='atom'
 
-#_gen_fzf_default_opts() {
+# _gen_fzf_default_opts() {
   #local base03="234"
   #local base02="235"
   #local base01="240"
@@ -55,10 +56,21 @@ export REACT_EDITOR='atom'
 
 #_gen_fzf_default_opts
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_OPTS="--color 16,info:6,hl+:1,fg+:10"
+#export FZF_DEFAULT_OPTS="--color 16,info:6,hl+:1,fg+:10"
+export FZF_DEFAULT_OPTS="--color bg+:#283237,info:6,hl:#DEC77A,hl+:#DA797B,fg+:#81F3DC"
 export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules,tmp,vendor}/*" 2> /dev/null'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+
+# Open workspace in your $EDITOR
+compdef wsp=wd
+wsp() {
+  if [[ $1 != "" ]] then 
+    wd $1
+    $EDITOR .
+  fi
+}
 
 #Now fzf (w/o pipe) will use rg instead of find
 #
@@ -86,14 +98,11 @@ fshow() {
 # Golang alias
   alias golist="go list -f '{{join .Deps \"\n\"}}' | xargs go list -f '{{if not .Standard}}{{.ImportPath}}{{end}}'"
 #application alias
-  alias vim='/usr/local/bin/vim'
   alias filetree="ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/ /' -e 's/-/|/'"
 #config alias
   alias zshrc="nvim ~/.zshrc"
-  alias vimrc="nvim ~/.vimrc"
   alias ohmyzsh="open ~/.oh-my-zsh"
   alias xvimrc="nvim ~/.xvimrc"
-  alias vimconfig="nvim ~/dotfiles/vimconfig"
   alias nvimrc="nvim ~/.config/nvim/init.vim"
 
   alias be="bundle exec"
@@ -101,9 +110,6 @@ fshow() {
   alias kill_all="pkill -9 -f"
   
   alias ngrok="./ngrok"
-#Syntax Highlighting enable 
-#Path to installation 
-  source /Users/myair/Developer/Helpful\ Stuff/zsh-syntax-highlighting-master/zsh-syntax-highlighting.plugin.zsh
 
 # History
 # Keep history in this file
@@ -161,3 +167,4 @@ pk () {
  echo "'$1' is not a valid file"
  fi
 }
+eval "$(rbenv init -)"

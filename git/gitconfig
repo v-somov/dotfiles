@@ -67,6 +67,8 @@
 [push]
 	default = simple
 [pager]
-        diff = /Users/myair/Documents/diff-highlight/diff-highlight | less
-        log = /Users/myair/Documents/diff-highlight/diff-highlight | less
-        show = /Users/myair/Documents/diff-highlight/diff-highlight | less
+        diff = diff-highlight | less
+        log = diff-highlight | less
+        show = diff-highlight | less
+[diff]
+	colorMoved = zebra

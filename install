@@ -17,6 +17,7 @@ git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ln -sf ~/dotfiles/git/gitconfig     ~/.gitconfig
 ln -sf ~/dotfiles/git/gitignore     ~/.gitignore_global
 
+ln -sf ~/dotfiles/hammerspoon     ~/.hammerspoon
 ln -sf ~/dotfiles/vimconfig/vimrc   ~/.vimrc
 ln -sf ~/dotfiles/vimconfig/vim     ~/.vim
 ln -sf ~/dotfiles/vimconfig/xvimrc  ~/.xvimrc
