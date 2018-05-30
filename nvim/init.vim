@@ -1,10 +1,11 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
+let g:python3_host_prog = "/usr/local/bin/python3"
+
 syntax enable
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 set termguicolors
-set background=dark
 
 language en_US
 set hls
@@ -16,25 +17,36 @@ set relativenumber
 set ignorecase
 set smartcase
 set nofoldenable
+set title
+set titlestring=%F
 
 set nobackup
 set nowb
 set noswapfile
+set noerrorbells                  " No bells!
+set novisualbell                  " I said, no bells!
+set autowrite
 
 set ai "Auto indent
 set si "Smart indent
 set wrap "Wrap lines
 
 set sw=2 ts=2 sts=2
-au FileType go setl sw=4 sts=4 ts=4
-au FileType swift setl sw=4 sts=4 ts=4
-au FileType py
-    \ set tabstop=4
-    \ set softtabstop=4
-    \ set shiftwidth=4
-    \ set textwidth=79
+au FileType go setl noexpandtab sw=4 sts=4 ts=4
+au FileType python setl sw=4 sts=4 ts=4 tw=79
+au FileType swift setl sw=2 sts=2 ts=2
+au FileType rb setl expandtab sw=2 sts=2 ts=2 tw=79
 
 set expandtab
+set splitright
+
+set shell=zsh
+set tags+=.git/tags,.git/rubytags
+set tagcase=match
+noremap ,gt :!gentags<CR>
+
+autocmd BufEnter * highlight OverLength ctermbg=7 guibg=Grey30
+autocmd BufEnter * match OverLength /\%80v.*/
 
 " Undo
 set undofile
@@ -57,55 +69,61 @@ noremap <right> 3<C-W>>
 
 call plug#begin('~/.config/nvim/plugged')
 
-Plug 'mhinz/vim-startify'
-
 Plug 'keith/swift.vim', { 'for': 'swift' }
 
-Plug 'trevordmiller/nova-vim'
 Plug 'hzchirs/vim-material'
+Plug 'iCyMind/NeoSolarized'
+Plug 'yggdroot/indentline'
+
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 
-Plug 'junegunn/vim-easy-align'
 Plug 'foosoft/vim-argwrap'
+nmap <Leader>a :ArgWrap<CR>
+
+Plug 'itchyny/lightline.vim'
+let g:lightline = {
+\ 'colorscheme': 'material',
+\ 'active': {
+\   'left': [ [ 'mode', 'paste' ],
+\             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+\ },
+\ 'component_function': {
+\   'gitbranch': 'fugitive#head'
+\ },
+\ }
 
 "tpope
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-jdaddy'
+Plug 'tpope/vim-bundler'
+Plug 'tpope/vim-endwise'
 
 Plug 'scrooloose/nerdcommenter'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'xolox/vim-misc'
-Plug 'xolox/vim-easytags'
 Plug 'haya14busa/incsearch.vim'
 Plug 'jszakmeister/vim-togglecursor'
 Plug 'godlygeek/tabular'
-Plug 'plasticboy/vim-markdown'
-Plug 'terryma/vim-expand-region'
-Plug 'majutsushi/tagbar'
+
+if exists(":Tabularize")
+  nmap <Leader>a= :Tabularize /=<CR>
+  vmap <Leader>a= :Tabularize /=<CR>
+  nmap <Leader>a: :Tabularize /:\zs<CR>
+  vmap <Leader>a: :Tabularize /:\zs<CR>
+endif
 
 Plug 'w0rp/ale'
-Plug 'tomlion/vim-solidity'
-
-Plug 'junegunn/goyo.vim'
-nnoremap <leader>gg :Goyo<CR>
 
 "rust
 Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 Plug 'cespare/vim-toml', { 'for': 'rust' }
 
-"JS
-Plug 'mxw/vim-jsx', { 'for': ['javascript', 'javascript.jsx'] }
-"let g:jsx_ext_required = 0 " Allow JSX in normal JS files
-Plug 'ternjs/tern_for_vim', { 'do': 'npm install && npm install -g tern', 'for': ['javascript', 'javascript.jsx'] }
-Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
-Plug 'pangloss/vim-javascript', { 'for': ['javascript', 'javascript.jsx'] }
-
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'for': 'go' }
 Plug 'nsf/gocode', { 'for': 'go' }
+
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
   Plug 'zchee/deoplete-go', {'build': {'unix': 'make'}, 'for': 'go' }
@@ -113,35 +131,29 @@ if has('nvim')
   Plug 'zchee/deoplete-jedi'
 endif
 
-"Python
-"Plug 'python-mode/python-mode', { 'branch': 'develop' }
-"let g:pymode_python = 'python3'
-"let g:pymode_rope_completion = 1
-"let g:pymode_syntax = 1
-"let g:pymode_rope_complete_on_dot = 0
-"let g:pymode_lint = 0
-"let g:pymode_indent = 1
-Plug 'hdima/python-syntax'
+Plug 'hdima/python-syntax', { 'for': 'python' }
 let python_highlight_all = 1
-Plug 'hkupty/iron.nvim', { 'do': ':UpdateRemotePlugins' }
-
-"Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
-"map <C-Y> :call yapf#YAPF()<cr>
-"imap <C-Y> <c-o>:call yapf#YAPF()<cr><Paste>
-
-"Ruby
-"Plug 'tpope/vim-rails'
-"Plug 'thoughtbot/vim-rspec'
+Plug 'ambv/black', { 'for': 'python' }
 
 " Initialize plugin system
 call plug#end()
 
+"set makeprg=bundle\ exec\ rspec\ --require\ /Users/vladsomov/Developer/QuickfixFormatter/QuickfixFormatter.rb\ --format\ QuickfixFormatter
 colorscheme vim-material
+"colorscheme NeoSolarized
+set background=dark
+"let g:neosolarized_contrast = "high"
+"let g:neosolarized_visibility = "normal"
+"let g:neosolarized_vertSplitBgTrans = 1
+"let g:neosolarized_bold = 1
+"let g:neosolarized_underline = 1
+"let g:neosolarized_italic = 1
 
 "ale
 " Error and warning signs.
-let g:ale_sign_error = '⤫'
+let g:ale_sign_error = 'E'
 let g:ale_sign_warning = '⚠'
+let g:ale_change_sign_column_color = 1
 
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_enter = 0
@@ -162,6 +174,7 @@ au FileType go nmap <Leader>gor <Plug>(go-run-vertical)
 au FileType go nmap <Leader>gb  :GoBuild<CR>
 au FileType go nmap <Leader>gi :GoInstall<CR>
 au FileType go nmap <leader>gt :GoTest<CR>
+au FileType go nmap <leader>ga :GoAlternate<CR>
 au FileType go nmap <leader>goc <Plug>(go-coverage)
 
 au FileType go nmap <Leader>ds <Plug>(go-def-split)
@@ -170,11 +183,14 @@ au FileType go nmap <Leader>s <Plug>(go-implements)
 au FileType go nmap <Leader>e <Plug>(go-rename)
 
 let g:go_fmt_command = "goimports"
+let g:go_highlight_types = 1
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
+let g:go_highlight_fields = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
 let g:go_auto_sameids = 1
 let g:go_auto_type_info = 1
 let g:go_term_enabled = 1
@@ -188,17 +204,6 @@ let g:deoplete#omni#input_patterns = get(g:,'deoplete#omni#input_patterns',{})
 call deoplete#custom#set('_', 'matchers', ['matcher_full_fuzzy'])
 let g:deoplete#omni#functions = {}
 
-"JS
-let g:deoplete#omni#functions.javascript = [
-  \ 'tern#Complete',
-  \ 'jspc#omni'
-\]
-set completeopt=longest,menuone,preview
-let g:deoplete#sources = {}
-let g:deoplete#sources['javascript.jsx'] = ['buffer', 'file', 'ultisnips', 'ternjs']
-let g:tern#command = ['tern']
-let g:tern#arguments = ['--persistent']
-
 "go
 let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
 let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
@@ -211,7 +216,7 @@ inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 :tnoremap <Esc> <C-\><C-n>
 
 "Disable preview window on top for YouAutoCompleteMe
-set completeopt-=preview
+"set completeopt-=preview
 
 nnoremap <leader><leader> :e #<CR>
 
@@ -221,23 +226,18 @@ imap <c-x><c-l> <plug>(fzf-complete-line)
 nnoremap <Leader>w :w<CR>
 nnoremap <Leader>q :wq<CR>
 nnoremap <Leader>x :q!<CR>
-nnoremap <leader>h :hide<CR>  
-nnoremap <leader>o :only<CR>  
+nnoremap <leader>h :hide<CR>
+nnoremap <leader>o :only<CR>
 nnoremap <leader>t :vsplit term://$SHELL<CR>
 
 "NERDTree
-nnoremap \ :NERDTreeToggle<CR>  
-map <leader>r :NERDTreeFind<cr>
-
-"nnoremap <silent> <C-L> :noh<CR>
-"nmap K <Plug>(devdocs-under-cursor)
+nnoremap \ :NERDTreeToggle<CR>
+nnoremap ,r :NERDTreeFind<cr>
 
 nmap <Leader>r<CR> *:%s///g<left><left>
 nmap <Leader>rc<CR> *:%s///gc<left><left><left>
 
 cnoremap <expr> %%  getcmdtype() == ':' ? expand('%:h').'/' : '%%'
-
-nmap <leader>\ :TagbarToggle<CR>
 
 map <M-K> <C-W>j<C-W>_
 map <M-K> <C-W>k<C-W>_
@@ -284,17 +284,17 @@ let g:fzf_action = {
 let g:fzf_layout = { 'down': '~25%' }
 
 nnoremap <C-p> :FZF -m<CR>
-nnoremap <leader>b :Buffers<CR>  
-nnoremap <leader>l :Lines<CR>  
-nnoremap <leader>c :Commits<CR>  
-nnoremap <leader>ch :History:<CR>  
+nnoremap <leader>b :Buffers<CR>
+nnoremap <leader>l :Lines<CR>
+nnoremap <leader>c :Commits<CR>
+nnoremap <leader>ch :History:<CR>
 
 
 "using rg for find in project
 let g:rg_command = '
   \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
   \ -g "*.{js,json,rs,go,rb,swift,scss}"
-  \ -g "!{.git,node_modules,vendor,log,swp,tmp}/*" '
+  \ -g "!{.git,node_modules,vendor,log,swp,tmp,venv,__pychache__}/*" '
 command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1, <bang>0)
 nnoremap <leader>f :F<CR>
 
@@ -305,22 +305,17 @@ command! -bang -nargs=* Rg
       \           : fzf#vim#with_preview('right:50%:hidden', '?'),
       \   <bang>0)
 
-nnoremap <leader>rg :Rg <C-R><C-W><CR> 
+nnoremap <leader>rg :Rg <C-R><C-W><CR>
 
 if executable('rg')
     set grepprg=rg\ --no-heading\ --vimgrep
     set grepformat=%f:%l:%c:%m
 endif
-"FZF using zsh config for finding and theme
 
 "incsearch.vim
 map /  <Plug>(incsearch-forward)
 map ?  <Plug>(incsearch-backward)
 map g/ <Plug>(incsearch-stay)
-
-"EasyAlign
-nmap ga :EasyAlign
-xmap ga :EasyAlign
 
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
 let g:UltiSnipsExpandTrigger = '<C-j>'
@@ -336,59 +331,21 @@ au BufRead,BufNewFile Fastfile set filetype=ruby
 
 au BufRead,BufNewFile *.gohtml set filetype=html
 au BufRead,BufNewFile *.pbxproj set syntax=xml
+au BufRead,BufNewFile *.sql set syntax=dbout
+
+au BufRead /tmp/psql.edit.* set syntax=sql
 
 autocmd BufWinEnter,WinEnter term://* startinsert
 autocmd VimResized * wincmd =
+autocmd BufWritePre * :%s/\s\+$//e " Delete trailing spaces on save
+
 
 augroup filetype
   au! BufRead,BufNewFile *.proto setfiletype proto
 augroup end
 
-"Return to last edit position when opening files (You want this!)
+"Return to last edit position when opening files
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-
-
-"colorscheme nova
-
-" Set status line
-"hi slred guifg=#9D86DE guibg=#232526 gui=bold
-"hi slgrn guifg=#A6E22E guibg=#232526 gui=bold
-"hi slorg guifg=#7AA8E1 guibg=#232526 gui=bold
-"hi slblu guifg=#9D86DE guibg=#232526 gui=bold
-
-"set statusline=%#slorg#%{getcwd()}%=%#slred#\ PERM=%{getfperm(expand('%'))}\ TYPE=%Y\ %#slgrn#\ LINE=%l/%L\ COL=%v\ |
-
-" Function: display errors from Ale in statusline
-function! LinterStatus() abort
-	 let l:counts = ale#statusline#Count(bufnr(''))
-	 let l:all_errors = l:counts.error + l:counts.style_error
-	 let l:all_non_errors = l:counts.total - l:all_errors
-	 return l:counts.total == 0 ? '' : printf(
-	 \ 'W:%d E:%d',
-	 \ l:all_non_errors,
-	 \ l:all_errors
-	 \)
-endfunction
-
-set laststatus=2
-set statusline=
-set statusline+=%2*\ %l
-set statusline+=\ %*
-set statusline+=%1*\ ‹‹
-set statusline+=%1*\ %f\ %*
-set statusline+=%1*\ ››
-set statusline+=%1*\ %m
-set statusline+=%3*\ %F
-set statusline+=%=
-set statusline+=%3*\ %{LinterStatus()}
-set statusline+=%3*\ ‹‹
-set statusline+=%3*\ %{strftime('%R',getftime(expand('%')))}
-set statusline+=%3*\ ::
-set statusline+=%3*\ %n
-set statusline+=%3*\ ››\ %*
-hi User1 guifg=#FFFFFF guibg=#3E4B54 gui=BOLD
-hi User2 guifg=#000000 guibg=#84ABF8
-hi User3 guifg=#000000 guibg=#CBE594 
 
 " Highlight merge conflict markers
 match Todo '\v^(\<|\=|\>){7}([^=].+)?$'
@@ -398,9 +355,6 @@ nnoremap <silent> ]c /\v^(\<\|\=\|\>){7}([^=].+)?$<CR>
 nnoremap <silent> [c ?\v^(\<\|\=\|\>){7}([^=].+)\?$<CR>
 
 let g:netrw_liststyle=3
-
- "Format the status line
-"set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
 
 " Delete trailing white space on save, useful for some filetypes ;)
 fun! CleanExtraSpaces()
@@ -412,7 +366,7 @@ fun! CleanExtraSpaces()
 endfun
 
 if has("autocmd")
-		autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
+    autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
 endif
 
 "Visual Selection

@@ -21,6 +21,7 @@ Keys = {
     ["Adobe Photoshop CC 2018"] = {{"cmd", "alt"}, "["},
     ["iBooks"] = {{"cmd", "alt"}, "b"},
     ["Telegram"] = {{"cmd", "alt"}, "t"},
+    ["Visual Studio Code"] = {{"cmd", "alt"}, "v"},
   },
 }
 

@@ -1,14 +1,17 @@
 # Path to your oh-my-zsh installation.
 export ZSH=/Users/vladsomov/.oh-my-zsh
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
 
 #ZSH_THEME=gitster
 ZSH_THEME=refined
 
-plugins=(git ruby z last-working-dir wd vi-mode zsh-syntax-highlighting)
+plugins=(git ruby z last-working-dir wd zsh-syntax-highlighting)
 
 # User configuration
 export PATH="/Users/vladsomov/.rbenv/shims:/usr/local/bin:/usr/local/bin/git:/usr/bin:/bin:/usr/sbin:/sbin:/Users/vladsomov/bin:/usr/local/bin/$HOME/.cargo/bin:$PATH"
 export PATH="/usr/local/mysql/bin:$PATH"
+export PATH="/Users/vladsomov/Developer/flutter/bin:$PATH"
 
 #GO
 export PATH=$PATH:/usr/local/go/bin
@@ -22,7 +25,7 @@ source $ZSH/oh-my-zsh.sh
 
 export EDITOR='nvim'
 
-# _gen_fzf_default_opts() {
+ #_gen_fzf_default_opts() {
   #local base03="234"
   #local base02="235"
   #local base01="240"
@@ -57,19 +60,15 @@ export EDITOR='nvim'
 #_gen_fzf_default_opts
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 #export FZF_DEFAULT_OPTS="--color 16,info:6,hl+:1,fg+:10"
-export FZF_DEFAULT_OPTS="--color bg+:#283237,info:6,hl:#DEC77A,hl+:#DA797B,fg+:#81F3DC"
+export FZF_DEFAULT_OPTS="--color bg+:#283237,info:6,hl:#DEC77A,hl+:#DA797B,fg+:#81F3DC,pointer:#E64A19,spinner:#673AB7"
 export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
-export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules,tmp,vendor}/*" 2> /dev/null'
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules,tmp,vendor,venv,__pycache__}/*" 2> /dev/null'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
-
-# Open workspace in your $EDITOR
-compdef wsp=wd
-wsp() {
-  if [[ $1 != "" ]] then 
-    wd $1
-    $EDITOR .
-  fi
+function gentags() {
+  echo "Exporting tags..."
+  ripper-tags -R -f .git/rubytags --tag-relative=yes
+  noglob ctags -R -f .git/tags --tag-relative=yes --exclude=*.rb
 }
 
 #Now fzf (w/o pipe) will use rg instead of find
@@ -95,6 +94,10 @@ fshow() {
     fi
   done
 }
+# Python alias
+  alias ip="ipython"
+  alias py="python3"
+
 # Golang alias
   alias golist="go list -f '{{join .Deps \"\n\"}}' | xargs go list -f '{{if not .Standard}}{{.ImportPath}}{{end}}'"
 #application alias
@@ -108,22 +111,25 @@ fshow() {
   alias be="bundle exec"
   alias fproc="ps aux| grep"
   alias kill_all="pkill -9 -f"
-  
-  alias ngrok="./ngrok"
+
+  #alias ngrok="./ngrok"
 
 # History
 # Keep history in this file
   export HISTFILE=~/.zsh_history
 # Max history command size
-  export HISTCONTROL=ignoredups:erasedups  
-  export HISTSIZE=100000                   
-  export HISTFILESIZE=100000    
+  export HISTCONTROL=ignoredups:erasedups
+  export HISTSIZE=100000
+  export HISTFILESIZE=100000
   export SAVEHIST=$HISTSIZE
 # enable histroy
   setopt APPEND_HISTORY
 # remove repeated,empty, and whitespace commands
   setopt HIST_IGNORE_SPACE
   setopt HIST_REDUCE_BLANKS
+
+# use this to send psql resutls to vim
+# export PAGER='nvim -R -'
 
 # Unarchive file
 # example: extract file
