@@ -3,7 +3,6 @@ export ZSH=/Users/vladsomov/.oh-my-zsh
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-#ZSH_THEME=gitster
 ZSH_THEME=refined
 
 plugins=(git ruby z last-working-dir wd zsh-syntax-highlighting)
@@ -20,28 +19,29 @@ export GOBIN=$HOME/Developer/go/bin
 export PATH=$PATH:$GOPATH/bin
 
 export PATH="$HOME/anaconda3/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
 
 source $ZSH/oh-my-zsh.sh
 
 export EDITOR='nvim'
 
- #_gen_fzf_default_opts() {
-  #local base03="234"
-  #local base02="235"
-  #local base01="240"
-  #local base00="241"
-  #local base0="244"
-  #local base1="245"
-  #local base2="254"
-  #local base3="230"
-  #local yellow="136"
-  #local orange="166"
-  #local red="160"
-  #local magenta="125"
-  #local violet="61"
-  #local blue="33"
-  #local cyan="37"
-  #local green="64"
+ _gen_fzf_default_opts() {
+  local base03="234"
+  local base02="235"
+  local base01="240"
+  local base00="241"
+  local base0="244"
+  local base1="245"
+  local base2="254"
+  local base3="230"
+  local yellow="136"
+  local orange="166"
+  local red="160"
+  local magenta="125"
+  local violet="61"
+  local blue="33"
+  local cyan="37"
+  local green="64"
 
   ## Comment and uncomment below for the light theme.
 
@@ -50,26 +50,18 @@ export EDITOR='nvim'
     ##--color fg:-1,bg:-1,hl:$blue,fg+:$base2,bg+:$base02,hl+:$blue
     ##--color info:$yellow,prompt:$yellow,pointer:$base3,marker:$base3,spinner:$yellow
   ##"
-  ### Solarized Light color scheme for fzf
-  #export FZF_DEFAULT_OPTS="
-   #--color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
-   #--color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
-  #"
-#}
-
-#_gen_fzf_default_opts
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-#export FZF_DEFAULT_OPTS="--color 16,info:6,hl+:1,fg+:10"
-export FZF_DEFAULT_OPTS="--color bg+:#283237,info:6,hl:#DEC77A,hl+:#DA797B,fg+:#81F3DC,pointer:#E64A19,spinner:#673AB7"
-export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
-export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules,tmp,vendor,venv,__pycache__}/*" 2> /dev/null'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-
-function gentags() {
-  echo "Exporting tags..."
-  ripper-tags -R -f .git/rubytags --tag-relative=yes
-  noglob ctags -R -f .git/tags --tag-relative=yes --exclude=*.rb
+  ## Solarized Light color scheme for fzf
+  export FZF_DEFAULT_OPTS="
+   --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
+   --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
+  "
 }
+
+_gen_fzf_default_opts
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.DS_Store,.git,node_modules,tmp,vendor,venv,__pycache__}/*" 2> /dev/null'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 #Now fzf (w/o pipe) will use rg instead of find
 #
@@ -98,10 +90,6 @@ fshow() {
   alias ip="ipython"
   alias py="python3"
 
-# Golang alias
-  alias golist="go list -f '{{join .Deps \"\n\"}}' | xargs go list -f '{{if not .Standard}}{{.ImportPath}}{{end}}'"
-#application alias
-  alias filetree="ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/ /' -e 's/-/|/'"
 #config alias
   alias zshrc="nvim ~/.zshrc"
   alias ohmyzsh="open ~/.oh-my-zsh"
@@ -111,8 +99,6 @@ fshow() {
   alias be="bundle exec"
   alias fproc="ps aux| grep"
   alias kill_all="pkill -9 -f"
-
-  #alias ngrok="./ngrok"
 
 # History
 # Keep history in this file
@@ -127,9 +113,6 @@ fshow() {
 # remove repeated,empty, and whitespace commands
   setopt HIST_IGNORE_SPACE
   setopt HIST_REDUCE_BLANKS
-
-# use this to send psql resutls to vim
-# export PAGER='nvim -R -'
 
 # Unarchive file
 # example: extract file
@@ -174,3 +157,46 @@ pk () {
  fi
 }
 eval "$(rbenv init -)"
+
+fstash() {
+  local out q k sha
+  while out=$(
+    git stash list --pretty="%C(yellow)%h %>(14)%Cgreen%cr %C(blue)%gs" |
+    fzf --ansi --no-sort --query="$q" --print-query \
+        --expect=ctrl-d,ctrl-b);
+  do
+    mapfile -t out <<< "$out"
+    q="${out[0]}"
+    k="${out[1]}"
+    sha="${out[-1]}"
+    sha="${sha%% *}"
+    [[ -z "$sha" ]] && continue
+    if [[ "$k" == 'ctrl-d' ]]; then
+      git diff $sha
+    elif [[ "$k" == 'ctrl-b' ]]; then
+      git stash branch "stash-$sha" $sha
+      break;
+    else
+      git stash show -p $sha
+    fi
+  done
+}
+
+# fkill - kill process
+fkill() {
+  local pid
+  pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+
+  if [ "x$pid" != "x" ]
+  then
+    echo $pid | xargs kill -${1:-9}
+  fi
+}
+
+tm() {
+  [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
+  if [ $1 ]; then
+    tmux $change -t "$1" 2>/dev/null || (tmux new-session -d -s $1 && tmux $change -t "$1"); return
+  fi
+  session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux $change -t "$session" || echo "No sessions found."
+}

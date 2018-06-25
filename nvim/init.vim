@@ -5,7 +5,9 @@ let g:python3_host_prog = "/usr/local/bin/python3"
 
 syntax enable
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-set termguicolors
+" set termguicolors
+
+set laststatus=0
 
 language en_US
 set hls
@@ -39,14 +41,10 @@ au FileType rb setl expandtab sw=2 sts=2 ts=2 tw=79
 
 set expandtab
 set splitright
-
-set shell=zsh
-set tags+=.git/tags,.git/rubytags
-set tagcase=match
-noremap ,gt :!gentags<CR>
+set splitbelow
 
 autocmd BufEnter * highlight OverLength ctermbg=7 guibg=Grey30
-autocmd BufEnter * match OverLength /\%80v.*/
+autocmd BufEnter * match OverLength /\%81v.*/
 
 " Undo
 set undofile
@@ -72,7 +70,8 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'keith/swift.vim', { 'for': 'swift' }
 
 Plug 'hzchirs/vim-material'
-Plug 'iCyMind/NeoSolarized'
+Plug 'altercation/vim-colors-solarized'
+Plug 'morhetz/gruvbox'
 Plug 'yggdroot/indentline'
 
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
@@ -81,18 +80,6 @@ Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'foosoft/vim-argwrap'
 nmap <Leader>a :ArgWrap<CR>
 
-Plug 'itchyny/lightline.vim'
-let g:lightline = {
-\ 'colorscheme': 'material',
-\ 'active': {
-\   'left': [ [ 'mode', 'paste' ],
-\             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-\ },
-\ 'component_function': {
-\   'gitbranch': 'fugitive#head'
-\ },
-\ }
-
 "tpope
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-unimpaired'
@@ -100,20 +87,17 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-jdaddy'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-endwise'
+Plug 'vim-ruby/vim-ruby'
+  let g:ruby_indent_assignment_style = 'variable'
 
 Plug 'scrooloose/nerdcommenter'
+let g:NERDSpaceDelims = 1
+
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'haya14busa/incsearch.vim'
 Plug 'jszakmeister/vim-togglecursor'
 Plug 'godlygeek/tabular'
-
-if exists(":Tabularize")
-  nmap <Leader>a= :Tabularize /=<CR>
-  vmap <Leader>a= :Tabularize /=<CR>
-  nmap <Leader>a: :Tabularize /:\zs<CR>
-  vmap <Leader>a: :Tabularize /:\zs<CR>
-endif
 
 Plug 'w0rp/ale'
 
@@ -135,19 +119,39 @@ Plug 'hdima/python-syntax', { 'for': 'python' }
 let python_highlight_all = 1
 Plug 'ambv/black', { 'for': 'python' }
 
+Plug 'kchmck/vim-coffee-script'
+
+
+Plug 'christoomey/vim-tmux-navigator'
 " Initialize plugin system
 call plug#end()
 
-"set makeprg=bundle\ exec\ rspec\ --require\ /Users/vladsomov/Developer/QuickfixFormatter/QuickfixFormatter.rb\ --format\ QuickfixFormatter
-colorscheme vim-material
-"colorscheme NeoSolarized
-set background=dark
-"let g:neosolarized_contrast = "high"
-"let g:neosolarized_visibility = "normal"
-"let g:neosolarized_vertSplitBgTrans = 1
-"let g:neosolarized_bold = 1
-"let g:neosolarized_underline = 1
-"let g:neosolarized_italic = 1
+cnoremap <expr> %% expand('%:h').'/'
+
+set shell=zsh
+set tags+=.git/tags,.git/rubytags,.git/bundlertags
+set tagcase=match
+noremap ,gt :!gentags<CR>
+
+let g:material_terminal_italics = 1
+
+" colorscheme vim-material
+"colorscheme gruvbox
+colorscheme solarized
+set background=light
+let g:solarized_bold=1
+"
+" Breakpoints
+autocmd! FileType python nnoremap ,b Oimport ipdb; ipdb.set_trace()<ESC>
+autocmd! FileType ruby nnoremap ,b Obinding.pry<ESC>
+autocmd! FileType coffee nnoremap ,b Odebugger;<ESC>
+
+nnoremap ,f :tabnew %<CR>
+
+" Tabular
+vmap ,:  :Tabularize /:\zs/l0l1<CR>
+vmap ,": :Tabularize /":\zs/l0l1<CR>
+vmap ,=  :Tabularize /=<CR>
 
 "ale
 " Error and warning signs.
@@ -275,6 +279,14 @@ nnoremap <space>go :Git checkout<Space>
 nnoremap <space>gps :Dispatch! git push<CR>
 nnoremap <space>gpl :Dispatch! git pull<CR>
 
+" Ruby
+command! Symbolicate  :%s/"\([a-z_]\+\)"/:\1/gc
+command! Stringify    :%s/:\([a-z_]\+\)/"\1"/gc
+command! NewHash      :%s/"\([^=,'"]*\)"\s\+=> /\1: /gc
+command! OldHash      :%s/\(\w*\): \(\w*\)/"\1" => \2/gc
+
+noremap ,a :!bundle exec rspec %<CR>
+
 " Fuzzy file finder
 let g:fzf_action = {
       \ 'ctrl-t': 'tab split',
@@ -288,12 +300,13 @@ nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>l :Lines<CR>
 nnoremap <leader>c :Commits<CR>
 nnoremap <leader>ch :History:<CR>
+nnoremap ,t :Tags<CR>
 
 
 "using rg for find in project
 let g:rg_command = '
   \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
-  \ -g "*.{js,json,rs,go,rb,swift,scss}"
+  \ -g "*.{coffee,haml,hamlc,js,json,rs,go,rb,py,swift,scss}"
   \ -g "!{.git,node_modules,vendor,log,swp,tmp,venv,__pychache__}/*" '
 command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1, <bang>0)
 nnoremap <leader>f :F<CR>
@@ -331,8 +344,9 @@ au BufRead,BufNewFile Fastfile set filetype=ruby
 
 au BufRead,BufNewFile *.gohtml set filetype=html
 au BufRead,BufNewFile *.pbxproj set syntax=xml
-au BufRead,BufNewFile *.sql set syntax=dbout
+"au BufRead,BufNewFile *.sql set syntax=dbout
 
+au BufRead,BufNewFile *.hamlc setlocal ft=haml
 au BufRead /tmp/psql.edit.* set syntax=sql
 
 autocmd BufWinEnter,WinEnter term://* startinsert
@@ -387,3 +401,38 @@ function! VisualSelection(direction, extra_filter) range
     let @" = l:saved_reg
 endfunction
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" SWITCH BETWEEN TEST AND PRODUCTION CODE
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! OpenTestAlternate()
+  let new_file = AlternateForCurrentFile()
+  exec ':e ' . new_file
+endfunction
+function! OpenTestAlternateSplit()
+  let new_file = AlternateForCurrentFile()
+  exec ':vsp ' . new_file
+endfunction
+function! AlternateForCurrentFile()
+  let current_file = expand("%")
+  let new_file = current_file
+  let in_spec = match(current_file, '^spec/') != -1
+  let going_to_spec = !in_spec
+  let in_app = match(current_file, '\<controllers\>') != -1 || match(current_file, '\<models\>') != -1 || match(current_file, '\<workers\>') != -1 || match(current_file, '\<views\>') != -1 || match(current_file, '\<helpers\>') != -1
+  if going_to_spec
+    if in_app
+      let new_file = substitute(new_file, '^app/', '', '')
+    end
+    let new_file = substitute(new_file, '\.e\?rb$', '_spec.rb', '')
+    let new_file = 'spec/' . new_file
+  else
+    let new_file = substitute(new_file, '_spec\.rb$', '.rb', '')
+    let new_file = substitute(new_file, '^spec/', '', '')
+    if in_app
+      let new_file = 'app/' . new_file
+    end
+  endif
+
+  return new_file
+endfunction
+nnoremap <leader>. :call OpenTestAlternate()<cr>
+nnoremap <leader>s. :call OpenTestAlternateSplit()<cr>

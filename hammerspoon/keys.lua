@@ -4,6 +4,7 @@ local hotkey = require "hs.hotkey"
 local shortcuts = {}
 Keys = {
   ["triggers"] = {
+    ["Alacritty"] = {{"cmd"}, "\\"},
     ["Safari"] = {{"cmd", "alt"}, "1"},
     ["Xcode"] = {{"cmd", "alt"}, "2"},
     ["Reminders"] = {{"cmd", "alt"}, "3"},

@@ -3,3 +3,8 @@ function gentags() {
   ripper-tags -R -f .git/rubytags --tag-relative=yes
   noglob ctags -R -f .git/tags --tag-relative=yes --exclude=*.rb
 }
+
+function bundlertags() {
+  echo "exporting bundler gems tags..."
+  ripper-tags -R -f .git/bundlertags --tag-relative=yes `bundle show --paths | grep bundler/gems`
+}
