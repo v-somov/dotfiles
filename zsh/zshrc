@@ -3,7 +3,9 @@ export ZSH=/Users/vladsomov/.oh-my-zsh
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
+#ZSH_THEME=gitster
 ZSH_THEME=refined
+#ZSH_THEME=spaceship
 
 plugins=(git ruby z last-working-dir wd zsh-syntax-highlighting)
 
@@ -59,9 +61,13 @@ export EDITOR='nvim'
 
 _gen_fzf_default_opts
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+#export FZF_DEFAULT_OPTS="--color 16,info:6,hl+:1,fg+:10"
+# export FZF_DEFAULT_OPTS="--color bg+:#283237,info:6,hl:#DEC77A,hl+:#DA797B,fg+:#81F3DC,pointer:#E64A19,spinner:#673AB7"
 export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.DS_Store,.git,node_modules,tmp,vendor,venv,__pycache__}/*" 2> /dev/null'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
+export FZF_TMUX=1
 
 #Now fzf (w/o pipe) will use rg instead of find
 #
@@ -100,6 +106,8 @@ fshow() {
   alias fproc="ps aux| grep"
   alias kill_all="pkill -9 -f"
 
+  #alias ngrok="./ngrok"
+
 # History
 # Keep history in this file
   export HISTFILE=~/.zsh_history
@@ -111,8 +119,19 @@ fshow() {
 # enable histroy
   setopt APPEND_HISTORY
 # remove repeated,empty, and whitespace commands
-  setopt HIST_IGNORE_SPACE
-  setopt HIST_REDUCE_BLANKS
+	setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits.
+	setopt SHARE_HISTORY             # Share history between all sessions.
+	setopt HIST_EXPIRE_DUPS_FIRST    # Expire duplicate entries first when trimming history.
+	setopt HIST_IGNORE_DUPS          # Dont record an entry that was just recorded again.
+	setopt HIST_IGNORE_ALL_DUPS      # Delete old recorded entry if new entry is a duplicate.
+	setopt HIST_FIND_NO_DUPS         # Do not display a line previously found.
+	setopt HIST_IGNORE_SPACE         # Dont record an entry starting with a space.
+	setopt HIST_SAVE_NO_DUPS         # Dont write duplicate entries in the history file.
+	setopt HIST_REDUCE_BLANKS        # Remove superfluous blanks before recording entry.
+  setopt hist_ignore_all_dups hist_save_nodups
+
+# use this to send psql resutls to vim
+# export PAGER='nvim -R -'
 
 # Unarchive file
 # example: extract file
@@ -199,4 +218,24 @@ tm() {
     tmux $change -t "$1" 2>/dev/null || (tmux new-session -d -s $1 && tmux $change -t "$1"); return
   fi
   session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux $change -t "$session" || echo "No sessions found."
+}
+
+# ftpane - switch pane (@george-b)
+ftpane() {
+  local panes current_window current_pane target target_window target_pane
+  panes=$(tmux list-panes -s -F '#I:#P - #{pane_current_path} #{pane_current_command}')
+  current_pane=$(tmux display-message -p '#I:#P')
+  current_window=$(tmux display-message -p '#I')
+
+  target=$(echo "$panes" | grep -v "$current_pane" | fzf +m --reverse) || return
+
+  target_window=$(echo $target | awk 'BEGIN{FS=":|-"} {print$1}')
+  target_pane=$(echo $target | awk 'BEGIN{FS=":|-"} {print$2}' | cut -c 1)
+
+  if [[ $current_window -eq $target_window ]]; then
+    tmux select-pane -t ${target_window}.${target_pane}
+  else
+    tmux select-pane -t ${target_window}.${target_pane} &&
+    tmux select-window -t $target_window
+  fi
 }
