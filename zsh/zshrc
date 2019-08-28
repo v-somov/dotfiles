@@ -1,0 +1,236 @@
+# Path to your oh-my-zsh installation.
+export ZSH=/Users/vladsomov/.oh-my-zsh
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+ZSH_THEME=refined
+
+plugins=(git ruby z last-working-dir wd zsh-syntax-highlighting vi-mode)
+
+# User configuration
+export PATH="/Users/vladsomov/.rbenv/shims:/usr/local/bin:/usr/local/bin/git:/usr/bin:/bin:/usr/sbin:/sbin:/Users/vladsomov/bin:/usr/local/bin"
+export PATH="/usr/local/mysql/bin:$PATH"
+export PATH="/Users/vladsomov/Developer/flutter/bin:$PATH"
+
+#Elixir iex
+export ERL_AFLAGS="-kernel shell_history enabled"
+
+#GO
+export PATH=$PATH:/usr/local/go/bin
+export GOPATH=$HOME/Developer/go
+export GOBIN=$HOME/Developer/go/bin
+export PATH=$PATH:$GOPATH/bin
+
+# export PATH="$HOME/anaconda3/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
+
+source $ZSH/oh-my-zsh.sh
+
+export EDITOR='/usr/local/bin/nvim'
+
+ _gen_fzf_default_opts() {
+  local base03="234"
+  local base02="235"
+  local base01="240"
+  local base00="241"
+  local base0="244"
+  local base1="245"
+  local base2="254"
+  local base3="230"
+  local yellow="136"
+  local orange="166"
+  local red="160"
+  local magenta="125"
+  local violet="61"
+  local blue="33"
+  local cyan="37"
+  local green="64"
+
+  ## Comment and uncomment below for the light theme.
+
+  ## Solarized Dark color scheme for fzf
+  ##export FZF_DEFAULT_OPTS="
+    ##--color fg:-1,bg:-1,hl:$blue,fg+:$base2,bg+:$base02,hl+:$blue
+    ##--color info:$yellow,prompt:$yellow,pointer:$base3,marker:$base3,spinner:$yellow
+  ##"
+  ## Solarized Light color scheme for fzf
+  export FZF_DEFAULT_OPTS="
+   --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
+   --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
+  "
+}
+
+_gen_fzf_default_opts
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+#export FZF_DEFAULT_OPTS="--color 16,info:6,hl+:1,fg+:10"
+# export FZF_DEFAULT_OPTS="--color bg+:#283237,info:6,hl:#DEC77A,hl+:#DA797B,fg+:#81F3DC,pointer:#E64A19,spinner:#673AB7"
+export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.DS_Store,.git,node_modules,tmp,vendor,venv,__pycache__}/*" 2> /dev/null'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
+export FZF_TMUX=1
+
+#Now fzf (w/o pipe) will use rg instead of find
+#
+# fshow - git commit browser (enter for show, ctrl-d for diff, ` toggles sort)
+fshow() {
+  git log --graph --color=always \
+      --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+  fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+      --bind "ctrl-m:execute:
+                (grep -o '[a-f0-9]\{7\}' | head -1 |
+                xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+                {}
+FZF-EOF"
+}
+# Python alias
+  alias ip="ipython"
+  alias py="python3"
+
+#config alias
+  alias zshrc="nvim ~/.zshrc"
+  alias ohmyzsh="open ~/.oh-my-zsh"
+  alias xvimrc="nvim ~/.xvimrc"
+  alias nvimrc="nvim ~/.config/nvim/init.vim"
+
+  alias be="bundle exec"
+  alias sp='bin/spring'
+  alias fproc="ps aux| grep"
+  alias kill_all="pkill -9 -f"
+  alias vim="/usr/local/bin/vim"
+
+  #alias ngrok="./ngrok"
+
+# History
+# Keep history in this file
+  export HISTFILE=~/.zsh_history
+# Max history command size
+  export HISTCONTROL=ignoredups:erasedups
+  export HISTSIZE=100000
+  export HISTFILESIZE=100000
+  export SAVEHIST=$HISTSIZE
+# enable histroy
+  setopt APPEND_HISTORY
+# remove repeated,empty, and whitespace commands
+	setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits.
+	setopt SHARE_HISTORY             # Share history between all sessions.
+	setopt HIST_EXPIRE_DUPS_FIRST    # Expire duplicate entries first when trimming history.
+	setopt HIST_IGNORE_DUPS          # Dont record an entry that was just recorded again.
+	setopt HIST_IGNORE_ALL_DUPS      # Delete old recorded entry if new entry is a duplicate.
+	setopt HIST_FIND_NO_DUPS         # Do not display a line previously found.
+	setopt HIST_IGNORE_SPACE         # Dont record an entry starting with a space.
+	setopt HIST_SAVE_NO_DUPS         # Dont write duplicate entries in the history file.
+	setopt HIST_REDUCE_BLANKS        # Remove superfluous blanks before recording entry.
+  setopt hist_ignore_all_dups hist_save_nodups
+
+  source /usr/local/opt/chruby/share/chruby/chruby.sh
+  # source /usr/local/opt/chruby/share/chruby/auto.sh
+  chruby ruby-2.4.5
+
+# use this to send psql resutls to vim
+# export PAGER='nvim -R -'
+
+# Unarchive file
+# example: extract file
+  extract () {
+   if [ -f $1 ] ; then
+   case $1 in
+   *.tar.bz2)   tar xjf $1        ;;
+   *.tar.gz)    tar xzf $1     ;;
+   *.bz2)       bunzip2 $1       ;;
+   *.rar)       unrar x $1     ;;
+   *.gz)        gunzip $1     ;;
+   *.tar)       tar xf $1        ;;
+   *.tbz2)      tar xjf $1      ;;
+   *.tbz)       tar -xjvf $1    ;;
+   *.tgz)       tar xzf $1       ;;
+   *.zip)       unzip $1     ;;
+   *.Z)         uncompress $1  ;;
+   *.7z)        7z x $1    ;;
+   *)           echo "I don't know how to extract '$1'..." ;;
+   esac
+   else
+   echo "'$1' is not a valid file"
+   fi
+  }
+
+# Create archive
+# example: pk tar file
+pk () {
+ if [ $1 ] ; then
+ case $1 in
+ tbz)       tar cjvf $2.tar.bz2 $2      ;;
+ tgz)       tar czvf $2.tar.gz  $2       ;;
+ tar)      tar cpvf $2.tar  $2       ;;
+ bz2)    bzip $2 ;;
+ gz)        gzip -c -9 -n $2 > $2.gz ;;
+ zip)       zip -r $2.zip $2   ;;
+ 7z)        7z a $2.7z $2    ;;
+ *)         echo "'$1' cannot be packed via pk()" ;;
+ esac
+ else
+ echo "'$1' is not a valid file"
+ fi
+}
+fstash() {
+  local out q k sha
+  while out=$(
+    git stash list --pretty="%C(yellow)%h %>(14)%Cgreen%cr %C(blue)%gs" |
+    fzf --ansi --no-sort --query="$q" --print-query \
+        --expect=ctrl-d,ctrl-b);
+  do
+    mapfile -t out <<< "$out"
+    q="${out[0]}"
+    k="${out[1]}"
+    sha="${out[-1]}"
+    sha="${sha%% *}"
+    [[ -z "$sha" ]] && continue
+    if [[ "$k" == 'ctrl-d' ]]; then
+      git diff $sha
+    elif [[ "$k" == 'ctrl-b' ]]; then
+      git stash branch "stash-$sha" $sha
+      break;
+    else
+      git stash show -p $sha
+    fi
+  done
+}
+
+# fkill - kill process
+fkill() {
+  local pid
+  pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+
+  if [ "x$pid" != "x" ]
+  then
+    echo $pid | xargs kill -${1:-9}
+  fi
+}
+
+tm() {
+  [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
+  if [ $1 ]; then
+    tmux $change -t "$1" 2>/dev/null || (tmux new-session -d -s $1 && tmux $change -t "$1"); return
+  fi
+  session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux $change -t "$session" || echo "No sessions found."
+}
+
+# ftpane - switch pane (@george-b)
+ftpane() {
+  local panes current_window current_pane target target_window target_pane
+  panes=$(tmux list-panes -s -F '#I:#P - #{pane_current_path} #{pane_current_command}')
+  current_pane=$(tmux display-message -p '#I:#P')
+  current_window=$(tmux display-message -p '#I')
+
+  target=$(echo "$panes" | grep -v "$current_pane" | fzf +m --reverse) || return
+
+  target_window=$(echo $target | awk 'BEGIN{FS=":|-"} {print$1}')
+  target_pane=$(echo $target | awk 'BEGIN{FS=":|-"} {print$2}' | cut -c 1)
+
+  if [[ $current_window -eq $target_window ]]; then
+    tmux select-pane -t ${target_window}.${target_pane}
+  else
+    tmux select-pane -t ${target_window}.${target_pane} &&
+    tmux select-window -t $target_window
+  fi
+}

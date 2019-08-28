@@ -1,0 +1,74 @@
+" ~/.xvimrc - Read by the XVim plugin for Xcode.
+" General settings {{{1
+set clipboard=unnamed
+set relativenumber
+"set number
+set ignorecase
+set smartcase
+set nowrap
+set wrapscan
+set laststatus=0
+set blinkcursor
+set noexpandtab
+
+" Mappings {{{1
+" Vim Mappings {{{2
+"nmap S i<CR><ESC>^m`gk:s/ +$//<CR>``
+
+"let mapleader = "\<Space>"
+
+" Whitespace removal
+nmap <space>w<CR> :%s/^\s+$//g<CR> :%s/\n\{3,}/\r\r/e<CR>:w<CR>:echo "Written and trimmed whitespace and new lines"<CR>
+nmap :c<CR> :%s/,\s*/, /g<CR>:echo "Added spaces after commas"<CR>
+
+nmap <C-b> :pj<CR>
+nmap <C-n> :nj<CR>
+
+nmap <space>r<CR> *:%s///g<left><left>
+nmap <space>rc<CR> *:%s///gc<left><left><left>
+" Navigation
+"nmap <space>f :xcmenucmd Open Quickly...<CR>
+"nmap <space>n :nissue<CR>
+"nmap <space>p :pissue<CR>
+"nmap <space>i :xcmenucmd Jump to Generated Interface<CR>
+
+" Show
+nmap <space>g :xcmenucmd History...<CR>
+nmap <space>F :xccmd showInFinder<CR>
+"nmap <space>D :xccmd showDeveloperDocumentation<CR>
+nmap <space>d :xcmenucmd Quick Help for Selected Item<CR>
+
+" Map <space>b to toggle a breakpoint at the current line
+nmap <space>b :xccmd toggleBreakpointAtCurrentLine<CR>
+
+map <C-p> :xccmd revealInProjectNavigator<CR>
+" Toggle Toolbars
+"nmap <space>h :xccmd toggleNavigatorsVisibility<CR>
+"nmap <space>j :xccmd toggleDebuggerVisibility<CR>
+"nmap <space>l :xccmd toggleUtilitiesVisibility<CR>
+"
+"map ,fa :xccmd foldAllMethods<CR>
+"map ,ua :xccmd unfoldAllMethods<CR>
+"map ,fc :xccmd foldAllComments<CR>
+"map ,uc :xccmd unfoldAllComments<CR>
+
+nmap <C-h> :xccmd selectPreviousTab<CR>
+nmap <C-l> :xccmd selectNextTab<CR>
+
+map <space>f viw:xccmd findSelectedTextInWorkspace<CR>
+vmap <space>f :xccmd findSelectedTextInWorkspace<CR>
+
+"swap words
+ 
+" Move visual block
+"vnoremap J :m '>+1<CR>gv=gv
+"vnoremap K :m '<-2<CR>gv=gv
+ 
+"Paste yanked text
+noremap <space>p "0p
+noremap <space>P "0P
+vnoremap <space>p "0p
+"Automatically jump to the end of text pasted
+vnoremap <silent> y y`]
+vnoremap <silent> p p`]
+nnoremap <silent> p p`]

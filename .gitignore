@@ -1,0 +1,5 @@
+vimconfig/vim/undo/*
+vimconfig/vim/bundle/*
+vimconfig/vim/.netrwhist
+
+hammerspoon/websites.lua
