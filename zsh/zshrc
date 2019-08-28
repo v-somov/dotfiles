@@ -3,16 +3,17 @@ export ZSH=/Users/vladsomov/.oh-my-zsh
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-#ZSH_THEME=gitster
 ZSH_THEME=refined
-#ZSH_THEME=spaceship
 
-plugins=(git ruby z last-working-dir wd zsh-syntax-highlighting)
+plugins=(git ruby z last-working-dir wd zsh-syntax-highlighting vi-mode)
 
 # User configuration
-export PATH="/Users/vladsomov/.rbenv/shims:/usr/local/bin:/usr/local/bin/git:/usr/bin:/bin:/usr/sbin:/sbin:/Users/vladsomov/bin:/usr/local/bin/$HOME/.cargo/bin:$PATH"
+export PATH="/Users/vladsomov/.rbenv/shims:/usr/local/bin:/usr/local/bin/git:/usr/bin:/bin:/usr/sbin:/sbin:/Users/vladsomov/bin:/usr/local/bin"
 export PATH="/usr/local/mysql/bin:$PATH"
 export PATH="/Users/vladsomov/Developer/flutter/bin:$PATH"
+
+#Elixir iex
+export ERL_AFLAGS="-kernel shell_history enabled"
 
 #GO
 export PATH=$PATH:/usr/local/go/bin
@@ -20,12 +21,12 @@ export GOPATH=$HOME/Developer/go
 export GOBIN=$HOME/Developer/go/bin
 export PATH=$PATH:$GOPATH/bin
 
-export PATH="$HOME/anaconda3/bin:$PATH"
+# export PATH="$HOME/anaconda3/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
 
 source $ZSH/oh-my-zsh.sh
 
-export EDITOR='nvim'
+export EDITOR='/usr/local/bin/nvim'
 
  _gen_fzf_default_opts() {
   local base03="234"
@@ -73,24 +74,14 @@ export FZF_TMUX=1
 #
 # fshow - git commit browser (enter for show, ctrl-d for diff, ` toggles sort)
 fshow() {
-  local out shas sha q k
-  while out=$(
-      git log --graph --color=always \
-          --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
-      fzf --ansi --multi --no-sort --reverse --query="$q" \
-          --print-query --expect=ctrl-d --toggle-sort=\`); do
-    q=$(head -1 <<< "$out")
-    k=$(head -2 <<< "$out" | tail -1)
-    shas=$(sed '1,2d;s/^[^a-z0-9]*//;/^$/d' <<< "$out" | awk '{print $1}')
-    [ -z "$shas" ] && continue
-    if [ "$k" = ctrl-d ]; then
-      git diff --color=always $shas | less -R
-    else
-      for sha in $shas; do
-        git show --color=always $sha | less -R
-      done
-    fi
-  done
+  git log --graph --color=always \
+      --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+  fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+      --bind "ctrl-m:execute:
+                (grep -o '[a-f0-9]\{7\}' | head -1 |
+                xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+                {}
+FZF-EOF"
 }
 # Python alias
   alias ip="ipython"
@@ -103,8 +94,10 @@ fshow() {
   alias nvimrc="nvim ~/.config/nvim/init.vim"
 
   alias be="bundle exec"
+  alias sp='bin/spring'
   alias fproc="ps aux| grep"
   alias kill_all="pkill -9 -f"
+  alias vim="/usr/local/bin/vim"
 
   #alias ngrok="./ngrok"
 
@@ -129,6 +122,10 @@ fshow() {
 	setopt HIST_SAVE_NO_DUPS         # Dont write duplicate entries in the history file.
 	setopt HIST_REDUCE_BLANKS        # Remove superfluous blanks before recording entry.
   setopt hist_ignore_all_dups hist_save_nodups
+
+  source /usr/local/opt/chruby/share/chruby/chruby.sh
+  # source /usr/local/opt/chruby/share/chruby/auto.sh
+  chruby ruby-2.4.5
 
 # use this to send psql resutls to vim
 # export PAGER='nvim -R -'
@@ -175,8 +172,6 @@ pk () {
  echo "'$1' is not a valid file"
  fi
 }
-eval "$(rbenv init -)"
-
 fstash() {
   local out q k sha
   while out=$(

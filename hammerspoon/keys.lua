@@ -5,12 +5,12 @@ local shortcuts = {}
 Keys = {
   ["triggers"] = {
     ["Alacritty"] = {{"cmd"}, "\\"},
-    ["Safari"] = {{"cmd", "alt"}, "1"},
+    ["Google Chrome"] = {{"cmd", "alt"}, "1"},
     ["Xcode"] = {{"cmd", "alt"}, "2"},
     ["iA Writer"] = {{"cmd", "alt"}, "3"},
     ["Mattermost"] = {{"cmd", "alt"}, "4"},
     ["Mail"] = {{"cmd", "alt"}, "5"},
-    ["Firefox"] = {{"cmd", "alt"}, "6"},
+    ["Safari"] = {{"cmd", "alt"}, "6"},
     ["Finder"] = {{"cmd", "alt"}, "7"},
     ["Simulator"] = {{"cmd", "alt"}, "8"},
     ["PDF Expert"] = {{"cmd", "alt"}, "9"},
@@ -23,6 +23,7 @@ Keys = {
     ["iBooks"] = {{"cmd", "alt"}, "b"},
     ["Telegram"] = {{"cmd", "alt"}, "t"},
     ["Visual Studio Code"] = {{"cmd", "alt"}, "v"},
+    ["Calendar"] = {{"cmd", "alt"}, "e"},
   },
 }
 

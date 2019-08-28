@@ -1,10 +1,14 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-let g:python3_host_prog = "/usr/local/bin/python3"
+let g:python3_host_prog = "/Users/vladsomov/anaconda3/bin/python3"
+let g:black_virtualenv = "/Users/vladsomov/anaconda3"
 
 syntax enable
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+
+set title
+set titlestring=%F
 
 set laststatus=0
 set lazyredraw
@@ -26,9 +30,6 @@ set noswapfile
 set noerrorbells                  " No bells!
 set novisualbell                  " I said, no bells!
 set autowrite
-
-" set ai "Auto indent
-" set si "Smart indent
 set wrap "Wrap lines
 
 set sw=2 ts=2 sts=2
@@ -41,18 +42,11 @@ set expandtab
 set splitright
 set splitbelow
 
-autocmd BufEnter * highlight OverLength ctermbg=7 guibg=Grey30
-autocmd BufEnter * match OverLength /\%81v.*/
-
 " Undo
 set undofile
-set undodir=$HOME/.vim/undo
+set undodir=$HOME/.nvim/undo
 
 let mapleader = "\<Space>"
-
-" Move visual block
-vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '<-2<CR>gv=gv
 
 " Search result to the center
 nnoremap n nzz
@@ -65,77 +59,91 @@ noremap <right> 3<C-W>>
 
 call plug#begin('~/.config/nvim/plugged')
 
-Plug 'keith/swift.vim', { 'for': 'swift' }
-
 Plug 'altercation/vim-colors-solarized'
 Plug 'yggdroot/indentline'
 
-Plug 'tpope/vim-eunuch'
 Plug 'justinmk/vim-dirvish'
   let dirvish_mode = ':sort | sort ,^.*/,'
   nnoremap \ :Dirvish<cr>
-autocmd! FileType dirvish setlocal relativenumber
+  autocmd! FileType dirvish setlocal relativenumber
 
+Plug 'aklt/plantuml-syntax'
+let g:plantuml_executable_script='java -jar /Users/vladsomov/Developer/plantuml.jar'
 
 Plug 'foosoft/vim-argwrap'
-nmap <Leader>a :ArgWrap<CR>
+  nmap <Leader>a :ArgWrap<CR>
 
 " tpope
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-jdaddy'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-eunuch'
 
 Plug 'vim-ruby/vim-ruby'
-let g:ruby_indent_assignment_style = 'variable'
+  let g:ruby_indent_assignment_style = 'variable'
 
 " js
 Plug 'kchmck/vim-coffee-script'
-Plug 'posva/vim-vue'
+Plug 'mxw/vim-jsx'
+Plug 'pangloss/vim-javascript'
+Plug 'sbdchd/neoformat'
+Plug 'flowtype/vim-flow'
 
 Plug 'scrooloose/nerdcommenter'
-let g:NERDSpaceDelims = 1
-
-Plug 'aklt/plantuml-syntax'
+  let g:NERDSpaceDelims = 1
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+
 Plug 'haya14busa/incsearch.vim'
 Plug 'jszakmeister/vim-togglecursor'
 Plug 'godlygeek/tabular'
-
-Plug 'w0rp/ale'
 
 " rust
 Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 Plug 'cespare/vim-toml', { 'for': 'rust' }
 
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'for': 'go' }
-Plug 'nsf/gocode', { 'for': 'go' }
+
+Plug 'slashmili/alchemist.vim'
+Plug 'elixir-editors/vim-elixir'
+
+Plug 'ervandew/supertab'
+  let g:loaded_ruby_provider = 1
+  let g:SuperTabDefaultCompletionType = 'context'
+  let g:SuperTabContextDefaultCompletionType = '<c-n>'
 
 if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-  Plug 'Shougo/neosnippet'
-  Plug 'Shougo/neosnippet-snippets'
-  Plug 'zchee/deoplete-go', {'build': {'unix': 'make'}, 'for': 'go' }
-  Plug 'jodosha/vim-godebug', { 'for': 'go' } " Debugger integration via delve
-  Plug 'zchee/deoplete-jedi'
+  Plug 'sebdah/vim-delve'
 endif
 
 Plug 'hdima/python-syntax', { 'for': 'python' }
-let python_highlight_all = 1
-Plug 'ambv/black', { 'for': 'python' }
+  let python_highlight_all = 1
+Plug 'python/black'
+  autocmd BufWritePre *.py execute ':Black'
 
 Plug 'christoomey/vim-tmux-navigator'
 
 call plug#end()
 
+let g:flow#autoclose = 1
+
+set completeopt-=menu
+set completeopt+=menuone   " show the popup menu even when there is only 1 match
+set completeopt-=longest   " don't insert the longest common text
+set completeopt-=preview   " don't show preview window
+" set completeopt+=noinsert  " don't insert any text until user chooses a match
+set completeopt-=noselect  " select first match
+set pumheight=10
+
 cnoremap <expr> %% expand('%:h').'/'
+nnoremap <leader>cd :lcd %:p:h<CR>:pwd<CR>
 
 set shell=zsh
 set tags+=.git/tags,.git/rubytags,.git/bundlertags
+set tags+=~/.rubies/ruby-2.4.5/tags,~/src/ruby-2.4.5/tags
 set tagcase=match
 noremap ,gt :!gentags<CR>
 
@@ -144,7 +152,7 @@ set background=light
 let g:solarized_bold=1
 
 " Breakpoints
-autocmd! FileType python nnoremap ,b Oimport ipdb; ipdb.set_trace()<ESC>
+autocmd! FileType python nnoremap ,b Obreakpoint()<ESC>
 autocmd! FileType ruby nnoremap ,b Obinding.pry<ESC>
 autocmd! FileType coffee nnoremap ,b Odebugger;<ESC>
 
@@ -154,40 +162,9 @@ nnoremap ,f :tabnew %<CR>
 vmap ,:  :Tabularize /:\zs/l0l1<CR>
 vmap ,": :Tabularize /":\zs/l0l1<CR>
 vmap ,=  :Tabularize /=<CR>
-vmap ,=> :Tabularize /=/l1l1<CR>
-
-" ALE
-" Error and warning signs.
-let g:ale_sign_error = 'E'
-let g:ale_sign_warning = '⚠'
-let g:ale_change_sign_column_color = 1
-
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_enter = 0
-
-let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 1
-
-let g:ale_echo_msg_error_str = 'E'
-let g:ale_echo_msg_warning_str = 'W'
-let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-let g:ale_fixers = {
-\   'go': ['gofmt', 'goimports'],
-\}
-let g:ale_fix_on_save = 1
-
-"GO
-au FileType go nmap <Leader>gor <Plug>(go-run-vertical)
-au FileType go nmap <Leader>gb  :GoBuild<CR>
-au FileType go nmap <Leader>gi :GoInstall<CR>
-au FileType go nmap <leader>gt :GoTest<CR>
-au FileType go nmap <leader>ga :GoAlternate<CR>
-au FileType go nmap <leader>goc <Plug>(go-coverage)
-
-au FileType go nmap <Leader>ds <Plug>(go-def-split)
-au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
-au FileType go nmap <Leader>s <Plug>(go-implements)
-au FileType go nmap <Leader>e <Plug>(go-rename)
+vmap ,{  :Tabularize /{<CR>
+vmap ,=> :Tabularize /=>/l1l1<CR>
+vmap ,,  :Tabularize /,\zs/l1r0<CR>
 
 let g:go_fmt_command = "goimports"
 let g:go_highlight_types = 1
@@ -202,49 +179,17 @@ let g:go_highlight_extra_types = 1
 let g:go_auto_type_info = 1
 let g:go_term_enabled = 1
 
-"Deoplete
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_ignore_case = 1
-let g:deoplete#enable_smart_case = 1
-let g:deoplete#auto_completion_start_length = 1
-let g:deoplete#omni#input_patterns = get(g:,'deoplete#omni#input_patterns',{})
-call deoplete#custom#source('_', 'matchers', ['matcher_full_fuzzy'])
-let g:deoplete#omni#functions = {}
-
-set completeopt-=preview
-
-" neosnippet
-let g:neosnippet#enable_completed_snippet = 1
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
-
-"Go Deoplete
-let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
-let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
-let g:deoplete#sources#go#use_cache = 1
-let g:deoplete#sources#go#json_directory = '~/.cache/deoplete/go/$GOOS_$GOARCH'
-
-" deoplete tab-complete
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-
-:tnoremap <Esc> <C-\><C-n>
-
 nnoremap <leader><leader> :e #<CR>
-
-"Mappings
-command! -nargs=* VT vsplit | terminal <args>
-command! -nargs=* ST split | terminal <args>
 
 nnoremap <Leader>w :w<CR>
 nnoremap <Leader>q :wq<CR>
 nnoremap <Leader>x :bd!<CR>
 nnoremap <leader>h :hide<CR>
 nnoremap <leader>o :only<CR>
-nnoremap <leader>t :VT<CR>
 
 nmap <Leader>r<CR> *:%s///g<left><left>
 nmap <Leader>rc<CR> *:%s///gc<left><left><left>
+nmap <Leader>gn<CR> *:%s///gn<CR>
 
 "Paste yanked text
 noremap <Leader>p "0p
@@ -274,27 +219,37 @@ imap <c-x><c-l> <plug>(fzf-complete-line)
 nnoremap <C-p> :FZF -m<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>l :Lines<CR>
-nnoremap <leader>c :Commits<CR>
+nnoremap <leader>co :Commits<CR>
 nnoremap <leader>ch :History:<CR>
 nnoremap ,t :Tags<CR>
+nnoremap <leader>d :BTags<CR>
+
+nnoremap <silent> gqaj :%!jq '.'<CR>
+command! -nargs=* JQFind :new | :read !jq <args> #
 
 vnoremap // y/\V<C-r>=escape(@",'/\')<CR><CR>
-
 "using rg for find in project
 let g:rg_command = '
   \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
-  \ -g "*.{coffee,haml,hamlc,js,json,rs,go,rb,py,swift,scss}"
-  \ -g "!{.git,node_modules,vendor,log,swp,tmp,venv,__pychache__}/*" '
+  \ -g "*.{coffee,haml,hamlc,erb,js,json,rs,go,rb,py,swift,scss}"
+  \ -g "!{.git,node_modules,vendor,log,swp,tmp,venv,__pychache__,pyc}/*" '
+
 command! -bang -nargs=* F
                  \ call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1,
-                 \ fzf#vim#with_preview(),
+                 \ fzf#vim#with_preview({'options': '--bind ctrl-a:select-all,ctrl-d:deselect-all --delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
                  \ <bang>0)
 nnoremap <leader>f :F<CR>
 
+command! -bang -nargs=* FF
+                 \ call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1,
+                 \ fzf#vim#with_preview({'options': '--bind ctrl-a:select-all,ctrl-d:deselect-all'}, 'right:50%:hidden', '?'),
+                 \ <bang>0)
+nnoremap ,f :FF<CR>
+
 command! -bang -nargs=* Rg
       \ call fzf#vim#grep(
-      \ 'rg --column --line-number --no-heading --color=always --ignore-case '.shellescape(<q-args>), 1,
-      \ fzf#vim#with_preview(),
+      \ 'rg --column --line-number --no-heading --color=always --ignore-case '.shellescape(<q-args>), 0,
+      \ fzf#vim#with_preview({'options': '--bind ctrl-a:select-all,ctrl-d:deselect-all'}, 'right:50%:hidden', '?'),
       \ <bang>0)
 
 nnoremap <leader>rg :Rg <C-R><C-W><CR>
@@ -310,10 +265,18 @@ map /  <Plug>(incsearch-forward)
 map ?  <Plug>(incsearch-backward)
 map g/ <Plug>(incsearch-stay)
 
+" Auto-format on save
+augroup fmt
+  autocmd!
+  autocmd BufWritePre *.js,*.jsx Neoformat prettier
+augroup END
 
+nnoremap ,r :redraw! <CR>
 autocmd BufWinEnter,WinEnter term://* startinsert
 autocmd VimResized * wincmd =
 autocmd BufWritePre * :%s/\s\+$//e " Delete trailing spaces on save
+
+command! Scratch :exe "e " . "~/.scratch/" . strftime('%Y-%m-%d') . ".txt"
 
 augroup filetype
   au! BufRead,BufNewFile *.proto set filetype=proto
@@ -326,6 +289,8 @@ augroup filetype
 
   au BufRead,BufNewFile *.hamlc setlocal ft=haml
   au BufRead /tmp/psql.edit.* set syntax=sql
+
+  au FileType sql setl formatprg=/usr/local/Cellar/pgformatter/3.0/bin/pg_format\ -
 augroup end
 
 "Return to last edit position when opening files
@@ -350,7 +315,8 @@ function! AlternateForCurrentFile()
   let new_file = current_file
   let in_spec = match(current_file, '^spec/') != -1
   let going_to_spec = !in_spec
-  let in_app = match(current_file, '\<controllers\>') != -1 || match(current_file, '\<models\>') != -1 || match(current_file, '\<workers\>') != -1 || match(current_file, '\<views\>') != -1 || match(current_file, '\<helpers\>') != -1
+  let in_app = match(current_file, '\<controllers\>') != -1 || match(current_file, '\<models\>') != -1 || match(current_file, '\<workers\>') != -1 || match(current_file, '\<views\>') != -1 || match(current_file, '\<helpers\>') != -1 || match(current_file, '\<services\>') != -1
+
   if going_to_spec
     if in_app
       let new_file = substitute(new_file, '^app/', '', '')
@@ -367,6 +333,10 @@ function! AlternateForCurrentFile()
 
   return new_file
 endfunction
+
+"Mappings
+command! -nargs=* VT vsplit | terminal <args>
+command! -nargs=* ST split | terminal <args>
 
 nnoremap <leader>. :call OpenTestAlternate()<cr>
 nnoremap <leader>s. :call OpenTestAlternateSplit()<cr>
@@ -411,5 +381,4 @@ map ,m :call RunTestFile()<cr>
 map ,. :call RunNearestTest()<cr>
 " Run all test files
 map ,a :call RunTests('spec')<cr>
-" noremap ,a :ST bundle exec rspec %<CR>
 

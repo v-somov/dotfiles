@@ -6,7 +6,7 @@ function gentags() {
 
 function bundlertags() {
   echo "exporting bundler gems tags..."
-  ripper-tags -R -f .git/bundlertags --tag-relative=yes `bundle show --paths | grep bundler/gems`
+  ripper-tags -R -f .git/bundlertags --tag-relative=yes `bundle show --paths` # | grep bundler/gems`
 }
 
 function ts {

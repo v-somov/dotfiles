@@ -4,6 +4,7 @@ local keys = require "keys"
 require "window_management"
 require "capslock_to_esc_and_ctrl"
 require "app_shortcuts"
+require "websites"
 
 keys.deactivateKeys()
 keys.activateKeys()
