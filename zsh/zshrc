@@ -11,14 +11,17 @@ plugins=(git ruby z last-working-dir wd zsh-syntax-highlighting vi-mode)
 export PATH="/Users/vladsomov/.rbenv/shims:/usr/local/bin:/usr/local/bin/git:/usr/bin:/bin:/usr/sbin:/sbin:/Users/vladsomov/bin:/usr/local/bin"
 export PATH="/usr/local/mysql/bin:$PATH"
 export PATH="/Users/vladsomov/Developer/flutter/bin:$PATH"
+export PATH=$PATH:~/.npm-global/bin
 
+export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
+export DYLD_FALLBACK_LIBRARY_PATH=/usr/local/opt/openssl@1.1/lib
 #Elixir iex
 export ERL_AFLAGS="-kernel shell_history enabled"
 
 #GO
-export PATH=$PATH:/usr/local/go/bin
+# export PATH=$PATH:/usr/local/go/bin
 export GOPATH=$HOME/Developer/go
-export GOBIN=$HOME/Developer/go/bin
+# export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOPATH/bin
 
 # export PATH="$HOME/anaconda3/bin:$PATH"
@@ -65,7 +68,7 @@ _gen_fzf_default_opts
 #export FZF_DEFAULT_OPTS="--color 16,info:6,hl+:1,fg+:10"
 # export FZF_DEFAULT_OPTS="--color bg+:#283237,info:6,hl:#DEC77A,hl+:#DA797B,fg+:#81F3DC,pointer:#E64A19,spinner:#673AB7"
 export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
-export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.DS_Store,.git,node_modules,tmp,vendor,venv,__pycache__}/*" 2> /dev/null'
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.DS_Store,.git,dist,node_modules,tmp,vendor,venv,__pycache__}/*" 2> /dev/null'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
 export FZF_TMUX=1
@@ -87,12 +90,17 @@ FZF-EOF"
   alias ip="ipython"
   alias py="python3"
 
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
 #config alias
   alias zshrc="nvim ~/.zshrc"
   alias ohmyzsh="open ~/.oh-my-zsh"
   alias xvimrc="nvim ~/.xvimrc"
   alias nvimrc="nvim ~/.config/nvim/init.vim"
 
+  alias k='kubectl'
   alias be="bundle exec"
   alias sp='bin/spring'
   alias fproc="ps aux| grep"
@@ -124,54 +132,56 @@ FZF-EOF"
   setopt hist_ignore_all_dups hist_save_nodups
 
   source /usr/local/opt/chruby/share/chruby/chruby.sh
-  # source /usr/local/opt/chruby/share/chruby/auto.sh
-  chruby ruby-2.4.5
+  source /usr/local/opt/chruby/share/chruby/auto.sh
+  chruby ruby-2.5.7
 
 # use this to send psql resutls to vim
 # export PAGER='nvim -R -'
 
 # Unarchive file
+#
 # example: extract file
-  extract () {
-   if [ -f $1 ] ; then
-   case $1 in
-   *.tar.bz2)   tar xjf $1        ;;
-   *.tar.gz)    tar xzf $1     ;;
-   *.bz2)       bunzip2 $1       ;;
-   *.rar)       unrar x $1     ;;
-   *.gz)        gunzip $1     ;;
-   *.tar)       tar xf $1        ;;
-   *.tbz2)      tar xjf $1      ;;
-   *.tbz)       tar -xjvf $1    ;;
-   *.tgz)       tar xzf $1       ;;
-   *.zip)       unzip $1     ;;
-   *.Z)         uncompress $1  ;;
-   *.7z)        7z x $1    ;;
-   *)           echo "I don't know how to extract '$1'..." ;;
-   esac
-   else
-   echo "'$1' is not a valid file"
-   fi
-  }
+extract () {
+  if [ -f $1 ] ; then
+  case $1 in
+  *.tar.bz2)   tar xjf $1        ;;
+  *.tar.gz)    tar xzf $1     ;;
+  *.bz2)       bunzip2 $1       ;;
+  *.rar)       unrar x $1     ;;
+  *.gz)        gunzip $1     ;;
+  *.tar)       tar xf $1        ;;
+  *.tbz2)      tar xjf $1      ;;
+  *.tbz)       tar -xjvf $1    ;;
+  *.tgz)       tar xzf $1       ;;
+  *.zip)       unzip $1     ;;
+  *.Z)         uncompress $1  ;;
+  *.7z)        7z x $1    ;;
+  *)           echo "I don't know how to extract '$1'..." ;;
+  esac
+  else
+  echo "'$1' is not a valid file"
+  fi
+}
 
 # Create archive
 # example: pk tar file
 pk () {
- if [ $1 ] ; then
- case $1 in
- tbz)       tar cjvf $2.tar.bz2 $2      ;;
- tgz)       tar czvf $2.tar.gz  $2       ;;
- tar)      tar cpvf $2.tar  $2       ;;
- bz2)    bzip $2 ;;
- gz)        gzip -c -9 -n $2 > $2.gz ;;
- zip)       zip -r $2.zip $2   ;;
- 7z)        7z a $2.7z $2    ;;
- *)         echo "'$1' cannot be packed via pk()" ;;
- esac
- else
- echo "'$1' is not a valid file"
- fi
+  if [ $1 ] ; then
+  case $1 in
+  tbz)       tar cjvf $2.tar.bz2 $2      ;;
+  tgz)       tar czvf $2.tar.gz  $2       ;;
+  tar)      tar cpvf $2.tar  $2       ;;
+  bz2)    bzip $2 ;;
+  gz)        gzip -c -9 -n $2 > $2.gz ;;
+  zip)       zip -r $2.zip $2   ;;
+  7z)        7z a $2.7z $2    ;;
+  *)         echo "'$1' cannot be packed via pk()" ;;
+  esac
+  else
+  echo "'$1' is not a valid file"
+  fi
 }
+
 fstash() {
   local out q k sha
   while out=$(
@@ -216,6 +226,7 @@ tm() {
 }
 
 # ftpane - switch pane (@george-b)
+
 ftpane() {
   local panes current_window current_pane target target_window target_pane
   panes=$(tmux list-panes -s -F '#I:#P - #{pane_current_path} #{pane_current_command}')
@@ -234,3 +245,60 @@ ftpane() {
     tmux select-window -t $target_window
   fi
 }
+
+
+fif() {
+  if [ ! "$#" -gt 0 ]; then echo "Need a string to search for!"; return 1; fi
+  local file
+  file="$(rg --max-count=1 --ignore-case --files-with-matches --no-messages "$@" | fzf-tmux +m --preview="rg --ignore-case --pretty --context 10 '"$@"' {}")" && nvim "$file"
+}
+
+
+# Select a docker container to start and attach to
+function da() {
+  local cid
+  cid=$(docker ps -a | sed 1d | fzf -1 -q "$1" | awk '{print $1}')
+
+  [ -n "$cid" ] && docker start -ia "$cid"
+}
+# Select a running docker container to stop
+function ds() {
+  local cid
+  cid=$(docker ps | sed 1d | fzf -q "$1" | awk '{print $1}')
+
+  [ -n "$cid" ] && docker stop "$cid"
+}
+# Select a docker container to remove
+function drm() {
+  local cid
+  cid=$(docker ps -a | sed 1d | fzf -q "$1" | awk '{print $1}')
+
+  [ -n "$cid" ] && docker rm "$cid"
+}
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/vladsomov/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/vladsomov/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/vladsomov/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/vladsomov/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+
+# export NVM_DIR="$HOME/.nvm"
+  # [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+  # [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+nvm() {
+  echo "🚨 NVM not loaded! Loading now..."
+  unset -f nvm
+  export NVM_PREFIX=$(brew --prefix nvm)
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_PREFIX/nvm.sh" ] && . "$NVM_PREFIX/nvm.sh"
+  nvm "$@"
+}
+
+autoload -Uz compinit
+for dump in ~/.zcompdump(N.mh+24); do
+  compinit
+done
+compinit -C
+
+

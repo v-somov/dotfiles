@@ -4,6 +4,10 @@ function gentags() {
   noglob ctags -R -f .git/tags --tag-relative=yes --exclude=*.rb
 }
 
+function jstags() {
+  noglob ctags -R -f .git/tags --tag-relative=yes
+}
+
 function bundlertags() {
   echo "exporting bundler gems tags..."
   ripper-tags -R -f .git/bundlertags --tag-relative=yes `bundle show --paths` # | grep bundler/gems`
@@ -13,4 +17,3 @@ function ts {
   args=$@
   tmux send-keys -t right "$args" C-m
 }
-

@@ -53,11 +53,15 @@
 	name = Vlad Somov
 	email = vlad.somov93@gmail.com
 [core]
-	excludesfile = /Users/myair/.gitignore_global
+	excludesfile = $HOME/.gitignore_global
 	editor = nvim
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
+	path =
+[difftool "fugitive"]
+  cmd = vimdiff $LOCAL $MERGED $REMOTE
+  trustExitCode = false
+  keepBackup = false
 [mergetool "sourcetree"]
 	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
@@ -75,3 +79,5 @@
 	colorMoved = zebra
 [commit]
 	verbose = true
+[pull]
+	rebase = false

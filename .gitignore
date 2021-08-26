@@ -3,3 +3,4 @@ vimconfig/vim/bundle/*
 vimconfig/vim/.netrwhist
 
 hammerspoon/websites.lua
+hammerspoon/Spoons/*
