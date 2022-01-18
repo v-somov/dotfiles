@@ -13,7 +13,6 @@ Keys = {
     ["Docker Desktop"] = {{"cmd", "alt"}, "6"},
     ["Finder"] = {{"cmd", "alt"}, "7"},
     ["Xcode"] = {{"cmd", "alt"}, "8"},
-    ["Simulator"] = {{"cmd", "alt"}, "s"},
     ["PDF Expert"] = {{"cmd", "alt"}, "9"},
     ["Postman"] = {{"cmd", "alt"}, "p"},
     ["Sketch"] = {{"cmd", "alt"}, "k"},
@@ -25,6 +24,7 @@ Keys = {
     ["Visual Studio Code"] = {{"cmd", "alt"}, "v"},
     ["Calendar"] = {{"cmd", "alt"}, "e"},
     ["Chromium"] = {{"cmd", "alt"}, "d"},
+    ["Safari"] = {{"cmd", "alt"}, "s"},
   },
 }
 

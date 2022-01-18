@@ -17,3 +17,7 @@ function ts {
   args=$@
   tmux send-keys -t right "$args" C-m
 }
+
+function gch() {
+ git checkout "$(git branch | fzf| tr -d '[:space:]')"
+}

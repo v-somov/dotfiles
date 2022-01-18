@@ -169,6 +169,9 @@ function resizeAllAppWindows(win, f)
   local app = win:application()
   local allAppWindows = app:allWindows()
   for _, w in ipairs(allAppWindows) do
+    if (string.find(w:title(), "DevTools")) then
+      return
+    end
     w:setFrame(f)
   end
 end

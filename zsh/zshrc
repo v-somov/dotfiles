@@ -80,11 +80,21 @@ fshow() {
   git log --graph --color=always \
       --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
   fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
-      --bind "ctrl-m:execute:
-                (grep -o '[a-f0-9]\{7\}' | head -1 |
+      --preview "(grep -o '[a-f0-9]\{7\}' | head -1 |
                 xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
                 {}
 FZF-EOF"
+
+      # --bind "ctrl-m:execute:
+                # (grep -o '[a-f0-9]\{7\}' | head -1 |
+                # xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+                # {}
+# FZF-EOF"
+}
+#
+# fgb - git commit browser (enter for show, ctrl-d for diff, ` toggles sort)
+fgb() {
+ git checkout "$(git branch - all | fzf| tr -d '[:space:]')"
 }
 # Python alias
   alias ip="ipython"
@@ -95,10 +105,11 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
 #config alias
-  alias zshrc="nvim ~/.zshrc"
+  alias zshrc="nv ~/.zshrc"
   alias ohmyzsh="open ~/.oh-my-zsh"
-  alias xvimrc="nvim ~/.xvimrc"
-  alias nvimrc="nvim ~/.config/nvim/init.vim"
+  alias xvimrc="nv ~/.xvimrc"
+  alias nvimrc="nv ~/.config/nvim/init.vim"
+  alias nv="VIMRUNTIME=$HOME/Developer/neovim/runtime $HOME/Developer/neovim/build/bin/nvim"
 
   alias k='kubectl'
   alias be="bundle exec"
@@ -182,6 +193,8 @@ pk () {
   fi
 }
 
+zmodload zsh/mapfile
+
 fstash() {
   local out q k sha
   while out=$(
@@ -189,7 +202,7 @@ fstash() {
     fzf --ansi --no-sort --query="$q" --print-query \
         --expect=ctrl-d,ctrl-b);
   do
-    mapfile -t out <<< "$out"
+    out = ( ${mapfile[$out]} )
     q="${out[0]}"
     k="${out[1]}"
     sha="${out[-1]}"
@@ -246,6 +259,16 @@ ftpane() {
   fi
 }
 
+gpr() {
+  prid=$(gh pr list | fzf | awk '{print$1}')
+  gh pr view $prid --web
+}
+
+gprch() {
+  prid=$(gh pr list | fzf | awk '{print$1}')
+  checkurl=$(gh pr checks $prid | column -t | fzf --with-nth=2,3,5 | awk '{print$5}')
+  open $checkurl
+}
 
 fif() {
   if [ ! "$#" -gt 0 ]; then echo "Need a string to search for!"; return 1; fi
