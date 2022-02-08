@@ -1,6 +1,7 @@
 require("nvim-treesitter.configs").setup({
-  indent = {
+  context_commentstring = {
     enable = true,
+    enable_autocmd = false,
   },
   ensure_installed = {
     "ruby",
@@ -12,24 +13,43 @@ require("nvim-treesitter.configs").setup({
     "jsonc",
     "yaml",
     "graphql",
+    "bash",
+    "css",
+    "html",
   },
-  highlight = { enable = false },
-  -- plugins
-  autopairs = { enable = true },
-  context_commentstring = {
+  highlight = {
     enable = true,
   },
-  textsubjects = {
+  indent = {
     enable = true,
-    keymaps = {
-        ["."] = "textsubjects-smart",
-        [","] = "textsubjects-container-outer",
-    },
+    disable = { "ruby", "yaml" },
   },
   matchup = {
     enable = true,
   },
   autotag = {
     enable = true,
-  }
+  },
+  textobjects = {
+    select = {
+      enable = true,
+      disable = { "ruby" }, -- Temporary fix, see: https://is.gd/E00YDa
+      lookahead = true,
+      keymaps = {
+        ["am"] = "@function.outer",
+        ["im"] = "@function.inner",
+      },
+    },
+    move = {
+      enable = true,
+      disable = { "ruby" }, -- Temporary fix, see: https://is.gd/E00YDa
+      set_jumps = true,
+      goto_next_start = {
+        ["]m"] = "@function.outer",
+      },
+      goto_previous_start = {
+        ["[m"] = "@function.outer",
+      },
+    },
+  },
 })

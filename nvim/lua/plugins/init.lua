@@ -21,7 +21,14 @@ return require("packer").startup(function()
     -- lsp
     use("neovim/nvim-lspconfig") -- makes lsp configuration easier
     use_with_config("RRethy/vim-illuminate", "illuminate") -- highlights and allows moving between variable references
-    use("jose-elias-alvarez/null-ls.nvim") -- allows using neovim as language server
+    -- use("jose-elias-alvarez/null-ls.nvim") -- allows using neovim as language server
+    use({
+        "jose-elias-alvarez/null-ls.nvim",
+        config = function()
+            require("null-ls").setup()
+        end,
+        requires = { "nvim-lua/plenary.nvim" },
+    })
 
     use("junegunn/vim-peekaboo")
 

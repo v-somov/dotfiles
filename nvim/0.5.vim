@@ -64,7 +64,6 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'tpope/vim-unimpaired'
   Plug 'tpope/vim-surround'
   Plug 'tpope/vim-bundler'
-  Plug 'tpope/vim-endwise'
   Plug 'tpope/vim-eunuch'
 
   Plug 'hrsh7th/nvim-compe'
@@ -75,7 +74,7 @@ call plug#begin('~/.config/nvim/plugged')
     nmap <Leader>a :ArgWrap<CR>
 
   Plug 'ervandew/supertab'
-    let g:loaded_ruby_provider = 1
+    let g:loaded_ruby_provider = 0
     let g:SuperTabDefaultCompletionType = 'context'
     let g:SuperTabContextDefaultCompletionType = '<c-n>'
 
@@ -88,9 +87,6 @@ call plug#begin('~/.config/nvim/plugged')
 
   Plug 'scrooloose/nerdcommenter'
     let g:NERDSpaceDelims = 1
-
-  Plug 'prettier/vim-prettier'
-  Plug 'jparise/vim-graphql'
 
   "Mappings
   command! -nargs=* VT vsplit | terminal <args>
@@ -118,9 +114,6 @@ call plug#begin('~/.config/nvim/plugged')
 call plug#end()
 
 set shell=zsh
-set tags+=.git/tags,.git/rubytags,.git/bundlertags
-set tagcase=match
-noremap ,gt :!gentags<CR>
 
 cnoremap <expr> %% expand('%:h').'/'
 nnoremap <leader>cd :lcd %:p:h<CR>:pwd<CR>
@@ -159,12 +152,6 @@ map g/ <Plug>(incsearch-stay)
 
 au BufNewFile,BufRead *.ts set filetype=typescript
 au BufNewFile,BufRead *.tsx set filetype=typescript
-
-autocmd FileType graphql let b:prettier_exec_cmd = "yarn prettier"
-autocmd FileType graphql let g:prettier#config#use_tabs = 'false'
-autocmd FileType graphql let g:prettier#config#parser = 'graphql'
-
-autocmd BufWritePre *.graphql  PrettierAsync
 
 " Breakpoints
 autocmd! FileType python nnoremap ,b Obreakpoint()<ESC>

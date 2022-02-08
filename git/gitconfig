@@ -15,15 +15,6 @@
   untracked = cyan
   added = green
   changed = red bold
-[color "diff"]
-  meta = red bold
-  frag = black bold
-  func = blue
-  old = red strike
-  new = green
-  commit = blue
-  whitespace = red
-  context = normal
 [color "branch"]
   current = cyan
   local = blue
@@ -70,13 +61,7 @@
 	smudge = git-lfs smudge %f
 	required = true
 [push]
-	default = simple
-[pager]
-        diff = diff-highlight | less
-        log = diff-highlight | less
-        show = diff-highlight | less
-[diff]
-	colorMoved = zebra
+	default = current
 [commit]
 	verbose = true
 [pull]
