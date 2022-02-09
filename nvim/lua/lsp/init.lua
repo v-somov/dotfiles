@@ -1,4 +1,4 @@
-local u = require("utils")
+local u = require("config.utils")
 local null_ls = require("lsp.null-ls")
 local tsserver = require("lsp.tsserver")
 local solargraph = require("lsp.solargraph")

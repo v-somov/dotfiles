@@ -79,7 +79,7 @@ fgb() {
   alias zshrc="nv ~/.zshrc"
   alias ohmyzsh="open ~/.oh-my-zsh"
   alias nvimrc="nv ~/.config/nvim/init.vim"
-  alias nv="nvim"
+  alias nv="arch -arm64 nvim"
 
   alias be="bundle exec"
   alias sp='bin/spring'
@@ -233,4 +233,3 @@ gprch() {
   checkurl=$(gh pr checks $prid | column -t | fzf --with-nth=2,3,5 | awk '{print$5}')
   open $checkurl
 }
-
