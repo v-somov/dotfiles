@@ -65,4 +65,4 @@
 [commit]
 	verbose = true
 [pull]
-	rebase = false
+	rebase = true

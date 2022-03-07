@@ -78,14 +78,14 @@ fgb() {
 #config alias
   alias zshrc="nv ~/.zshrc"
   alias ohmyzsh="open ~/.oh-my-zsh"
-  alias nvimrc="nv ~/.config/nvim/init.vim"
-  alias nv="arch -arm64 nvim"
+  alias nvimrc="nv ~/.config/nvim/init.lua"
 
   alias be="bundle exec"
   alias sp='bin/spring'
   alias fproc="ps aux| grep"
   alias kill_all="pkill -9 -f"
 
+  alias nv="arch -arm64 nvim"
   alias bundle="arch -arm64 bundle"
   alias rails="arch -arm64 rails"
   alias brew="arch -arm64 brew"

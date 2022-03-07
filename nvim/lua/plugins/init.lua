@@ -118,6 +118,8 @@ return require("packer").startup(function()
       },
       config = config('cmp'),
     }
+    use_with_config("nathom/filetype.nvim", "filetype")
+
     if packer_bootstrap then
       require('packer').sync()
     end
