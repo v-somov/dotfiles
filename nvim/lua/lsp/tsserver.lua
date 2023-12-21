@@ -17,7 +17,7 @@ M.setup = function(on_attach, capabilities)
         root_dir = lspconfig.util.root_pattern("package.json"),
         init_options = ts_utils.init_options,
         on_attach = function(client, bufnr)
-            client.resolved_capabilities.document_formatting = false
+            client.server_capabilities.documentFormattingProvider = false
 
             on_attach(client, bufnr)
 

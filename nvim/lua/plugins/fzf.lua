@@ -81,14 +81,14 @@ require("fzf-lua").setup({
     },
     files = {
       prompt = 'Files> ',
-      cmd = 'rg .  --files --no-ignore --hidden --follow -g "Gemfile*" -g ".gitignore" -g "bin/*" -g "*.{lua,ts,tsx,graphql,coffee,haml,hamlc,erb,js,json,rs,go,rb,py,swift,scss,c,yml,yaml,css}" -g "!{.git,generated,node_modules,dist,vendor,log,swp,tmp,venv,__pychache__,pyc}/*"',
+      cmd = 'rg .  --files --no-ignore --hidden --follow -g "Gemfile*" -g ".gitignore" -g "bin/*" -g "*.{vue,lua,ts,tsx,graphql,coffee,haml,hamlc,erb,js,json,rs,go,rb,py,swift,scss,c,yml,yaml,css,md}" -g ".env*" -g "Docker*" -g "Procfile" -g "!{.git,generated,node_modules,dist,vendor,log,swp,tmp,venv,__pychache__,pyc}/*"',
       actions = file_actions,
       git_icons = false,
       color_icons = false,
     },
     grep = {
       -- only search file content, not names
-      rg_opts = "--hidden --column --line-number --no-heading --color=always --smart-case -g 'Gemfile*' -g '.gitignore' -g 'bin/*' -g '*.{lua,ts,tsx,graphql,coffee,haml,hamlc,erb,js,rs,go,rb,py,swift,scss,c}' -g '!{.git,**/generated,node_modules,dist,vendor,log,swp,tmp,venv,__pychache__,pyc}/*'",
+      rg_opts = "--hidden --column --line-number --no-heading --color=always --smart-case -g 'Gemfile*' -g '.gitignore' -g 'bin/*' -g '*.{vue,lua,ts,tsx,graphql,coffee,haml,hamlc,erb,js,rs,go,rb,py,swift,scss,c,md,yml,yaml}' -g '.env*' -g 'Docker*' -g 'Procfile' -g '!{.git,**/generated,node_modules,dist,vendor,log,swp,tmp,venv,__pychache__,pyc}/*'",
       actions = file_actions,
     },
     bcommits = {

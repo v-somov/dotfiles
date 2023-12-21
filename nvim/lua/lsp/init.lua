@@ -2,7 +2,9 @@ local u = require("config.utils")
 local null_ls = require("lsp.null-ls")
 local tsserver = require("lsp.tsserver")
 local solargraph = require("lsp.solargraph")
+local standardrb = require("lsp.standardrb")
 local eslint = require("lsp.eslint")
+local golang = require("lsp.go")
 
 local lsp = vim.lsp
 local api = vim.api
@@ -40,7 +42,7 @@ local on_attach = function(client, bufnr)
     -- bindings
     u.buf_map(bufnr, "n", "gi", ":LspRename<CR>")
     u.buf_map(bufnr, "n", "gy", ":LspTypeDef<CR>")
-    u.buf_map(bufnr, "n", "K", ":LspHover<CR>")
+    -- u.buf_map(bufnr, "n", "K", ":LspHover<CR>")
     u.buf_map(bufnr, "n", "[a", ":LspDiagPrev<CR>")
     u.buf_map(bufnr, "n", "]a", ":LspDiagNext<CR>")
     u.buf_map(bufnr, "n", ",a", ":LspDiagLine<CR>")
@@ -51,11 +53,11 @@ local on_attach = function(client, bufnr)
     u.buf_map(bufnr, "n", "gd", ":LspDef<CR>")
     u.buf_map(bufnr, "n", "ga", ":LspAct<CR>")
 
-    if client.resolved_capabilities.document_formatting then
+    if client.server_capabilities.documentFormattingProvider then
         vim.cmd([[
             augroup LspFormatting
                 autocmd! * <buffer>
-                autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync({})
+                autocmd BufWritePre <buffer> lua vim.lsp.buf.format({})
             augroup END
         ]])
     end
@@ -66,5 +68,24 @@ end
 tsserver.setup(on_attach)
 null_ls.setup(on_attach)
 eslint.setup(on_attach)
-solargraph.setup(on_attach)
+-- solargraph.setup(on_attach)
+require'lspconfig'.solargraph.setup{
+  cmd = { "bundle", "exec", "solargraph", "stdio" },
+}
+standardrb.setup(on_attach)
+golang.setup(on_attach)
+
+require('lspconfig').yamlls.setup{
+     settings = {
+        yaml = {
+           schemas = { kubernetes = "globPattern" },
+      }
+    }
+}
+
+require('lspconfig').terraformls.setup{filetypes = { "terraform", "tf" }}
 -- require'lspconfig'.graphql.setup{}
+
+vim.cmd([[
+    autocmd BufWritePre *.tf lua vim.lsp.buf.format()
+]])

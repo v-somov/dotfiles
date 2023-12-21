@@ -111,21 +111,6 @@ u.command("VsplitLast", "Vsplit #")
 u.map("n", "<Leader>vv", ":VsplitLast<CR>")
 
 
-local fzf = require("fzf")
-
-commands.coauthorship = function()
-    coroutine.wrap(function()
-        local authors = vim.fn.systemlist('git log -100 --pretty="%ae" | sort -u')
-        local result = fzf.fzf(authors, '-i')
-        if result then
-            local author = {"", "", "Co-authored-by: " .. result[1]}
-            vim.api.nvim_put(author, "l", true, false)
-        end
-    end)()
-end
-
-vim.cmd("command! Coauthorship lua global.commands.coauthorship()")
-
 global.commands = commands
 
 -- reset LSP diagnostics and treesitter

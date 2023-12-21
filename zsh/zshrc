@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/vlad/.oh-my-zsh
+export ZSH=/Users/vladislavsomov/.oh-my-zsh
 ZSH_THEME=refined
 
 plugins=(git asdf ruby z last-working-dir wd zsh-syntax-highlighting vi-mode)
@@ -7,8 +7,9 @@ plugins=(git asdf ruby z last-working-dir wd zsh-syntax-highlighting vi-mode)
 
 source $ZSH/oh-my-zsh.sh
 
-export EDITOR='/opt/homebrew/bin/nvim'
-export PATH="/opt/homebrew/bin/mysql:$PATH"
+
+export PATH="/Users/vladislavsomov/homebrew/bin:$PATH"
+export EDITOR='nvim'
 
  _gen_fzf_default_opts() {
   local base03="234"
@@ -80,12 +81,13 @@ fgb() {
   alias ohmyzsh="open ~/.oh-my-zsh"
   alias nvimrc="nv ~/.config/nvim/init.lua"
 
-  alias be="bundle exec"
+  alias be="arch -arm64 bundle exec"
   alias sp='bin/spring'
   alias fproc="ps aux| grep"
   alias kill_all="pkill -9 -f"
 
   alias nv="arch -arm64 nvim"
+  alias dv="arch -arm64 ~/Developer/nvim-macos/bin/nvim -u ~/.config/nvim-dev/init.lua"
   alias bundle="arch -arm64 bundle"
   alias rails="arch -arm64 rails"
   alias brew="arch -arm64 brew"

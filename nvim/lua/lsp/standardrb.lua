@@ -2,8 +2,8 @@ local lspconfig = require('lspconfig')
 
 local M = {}
 M.setup = function(on_attach)
-  lspconfig.solargraph.setup({
-      cmd = { "bundle", "exec", "solargraph", "stdio" },
+  lspconfig.standardrb.setup({
+      cmd = { "bundle", "exec", "standardrb", "--lsp" },
       on_attach = function(client, bufnr)
         client.server_capabilities.documentFormattingProvider = false
         on_attach(client, bufnr)

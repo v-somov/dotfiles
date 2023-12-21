@@ -8,6 +8,7 @@ require("nvim-treesitter.configs").setup({
     "javascript",
     "typescript",
     "tsx",
+    "go",
     "lua",
     "json",
     "jsonc",
@@ -19,6 +20,8 @@ require("nvim-treesitter.configs").setup({
   },
   highlight = {
     enable = true,
+    disable = { "ruby" },
+    additional_vim_regex_highlighting = false,
   },
   indent = {
     enable = true,
