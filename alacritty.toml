@@ -1,0 +1,353 @@
+tabspaces = 8
+draw_bold_text_with_bright_colors = true
+"debug.render_timer" = false
+
+[dpi]
+x = 96
+y = 96
+
+[visual_bell]
+animation = "EaseOutExpo"
+duration = 0
+
+[window]
+decorations = "none"
+
+[font]
+size = 14
+use_thin_strokes = true
+
+  [font.normal]
+  family = "Hack Nerd Font"
+  style = "Regular"
+
+  [font.bold]
+  family = "Hack Nerd Font"
+  style = "Bold"
+
+  [font.italic]
+  family = "Hack Nerd Font"
+  style = "Italic"
+
+  [font.offset]
+  x = 0
+  y = -1
+
+  [font.glyph_offset]
+  x = 0
+  y = 0
+
+[colors.primary]
+background = "0xfdf6e3"
+foreground = "0x586e75"
+
+[colors.normal]
+black = "0x073642"
+red = "0xdc322f"
+green = "0x859900"
+yellow = "0xb58900"
+blue = "0x268bd2"
+magenta = "0xd33682"
+cyan = "0x2aa198"
+white = "0xeee8d5"
+
+[colors.bright]
+black = "0x002b36"
+red = "0xcb4b16"
+green = "0x586e75"
+yellow = "0x657b83"
+blue = "0x839496"
+magenta = "0x6c71c4"
+cyan = "0x93a1a1"
+white = "0xfdf6e3"
+
+[[key_bindings]]
+key = "Q"
+mods = "Command"
+action = "Quit"
+
+[[key_bindings]]
+key = "V"
+mods = "Command"
+action = "Paste"
+
+[[key_bindings]]
+key = "C"
+mods = "Command"
+action = "Copy"
+
+[[key_bindings]]
+key = "Key1"
+mods = "Command"
+chars = "\u00011"
+
+[[key_bindings]]
+key = "Key2"
+mods = "Command"
+chars = "\u00012"
+
+[[key_bindings]]
+key = "Key3"
+mods = "Command"
+chars = "\u00013"
+
+[[key_bindings]]
+key = "Key4"
+mods = "Command"
+chars = "\u00014"
+
+[[key_bindings]]
+key = "Key5"
+mods = "Command"
+chars = "\u00015"
+
+[[key_bindings]]
+key = "Key6"
+mods = "Command"
+chars = "\u00016"
+
+[[key_bindings]]
+key = "Key7"
+mods = "Command"
+chars = "\u00017"
+
+[[key_bindings]]
+key = "Key8"
+mods = "Command"
+chars = "\u00018"
+
+[[key_bindings]]
+key = "Key9"
+mods = "Command"
+chars = "\u00019"
+
+[[key_bindings]]
+key = "T"
+mods = "Command"
+chars = "\u0001c"
+
+[[key_bindings]]
+key = "W"
+mods = "Command"
+chars = "\u0001x"
+
+[[key_bindings]]
+key = "F"
+mods = "Control"
+chars = "\u0001f"
+
+[[key_bindings]]
+key = "O"
+mods = "Command"
+chars = "\u0001a"
+
+[[key_bindings]]
+key = "Home"
+chars = "\u001b[H"
+mode = "~AppCursor"
+
+[[key_bindings]]
+key = "Home"
+chars = "\u001b[1~"
+mode = "AppCursor"
+
+[[key_bindings]]
+key = "End"
+chars = "\u001b[F"
+mode = "~AppCursor"
+
+[[key_bindings]]
+key = "End"
+chars = "\u001b[4~"
+mode = "AppCursor"
+
+[[key_bindings]]
+key = "PageUp"
+chars = "\u001b[5~"
+
+[[key_bindings]]
+key = "PageDown"
+chars = "\u001b[6~"
+
+[[key_bindings]]
+key = "Equals"
+mods = "Command"
+action = "IncreaseFontSize"
+
+[[key_bindings]]
+key = "Minus"
+mods = "Command"
+action = "DecreaseFontSize"
+
+[[key_bindings]]
+key = "Left"
+mods = "Shift"
+chars = "\u001b[1;2D"
+
+[[key_bindings]]
+key = "Left"
+mods = "Control"
+chars = "\u001b[1;5D"
+
+[[key_bindings]]
+key = "Left"
+mods = "Alt"
+chars = "\u001b[1;3D"
+
+[[key_bindings]]
+key = "Left"
+chars = "\u001b[D"
+mode = "~AppCursor"
+
+[[key_bindings]]
+key = "Left"
+chars = "\u001bOD"
+mode = "AppCursor"
+
+[[key_bindings]]
+key = "Right"
+mods = "Shift"
+chars = "\u001b[1;2C"
+
+[[key_bindings]]
+key = "Right"
+mods = "Control"
+chars = "\u001b[1;5C"
+
+[[key_bindings]]
+key = "Right"
+mods = "Alt"
+chars = "\u001b[1;3C"
+
+[[key_bindings]]
+key = "Right"
+chars = "\u001b[C"
+mode = "~AppCursor"
+
+[[key_bindings]]
+key = "Right"
+chars = "\u001bOC"
+mode = "AppCursor"
+
+[[key_bindings]]
+key = "Up"
+mods = "Shift"
+chars = "\u001b[1;2A"
+
+[[key_bindings]]
+key = "Up"
+mods = "Control"
+chars = "\u001b[1;5A"
+
+[[key_bindings]]
+key = "Up"
+mods = "Alt"
+chars = "\u001b[1;3A"
+
+[[key_bindings]]
+key = "Up"
+chars = "\u001b[A"
+mode = "~AppCursor"
+
+[[key_bindings]]
+key = "Up"
+chars = "\u001bOA"
+mode = "AppCursor"
+
+[[key_bindings]]
+key = "Down"
+mods = "Shift"
+chars = "\u001b[1;2B"
+
+[[key_bindings]]
+key = "Down"
+mods = "Control"
+chars = "\u001b[1;5B"
+
+[[key_bindings]]
+key = "Down"
+mods = "Alt"
+chars = "\u001b[1;3B"
+
+[[key_bindings]]
+key = "Down"
+chars = "\u001b[B"
+mode = "~AppCursor"
+
+[[key_bindings]]
+key = "Down"
+chars = "\u001bOB"
+mode = "AppCursor"
+
+[[key_bindings]]
+key = "Tab"
+mods = "Shift"
+chars = "\u001b[Z"
+
+[[key_bindings]]
+key = "F1"
+chars = "\u001bOP"
+
+[[key_bindings]]
+key = "F2"
+chars = "\u001bOQ"
+
+[[key_bindings]]
+key = "F3"
+chars = "\u001bOR"
+
+[[key_bindings]]
+key = "F4"
+chars = "\u001bOS"
+
+[[key_bindings]]
+key = "F5"
+chars = "\u001b[15~"
+
+[[key_bindings]]
+key = "F6"
+chars = "\u001b[17~"
+
+[[key_bindings]]
+key = "F7"
+chars = "\u001b[18~"
+
+[[key_bindings]]
+key = "F8"
+chars = "\u001b[19~"
+
+[[key_bindings]]
+key = "F9"
+chars = "\u001b[20~"
+
+[[key_bindings]]
+key = "F10"
+chars = "\u001b[21~"
+
+[[key_bindings]]
+key = "F11"
+chars = "\u001b[23~"
+
+[[key_bindings]]
+key = "F12"
+chars = "\u001b[24~"
+
+[[key_bindings]]
+key = "Back"
+chars = "\u007f"
+
+[[key_bindings]]
+key = "Delete"
+chars = "\u001b[3~"
+mode = "AppKeypad"
+
+[[key_bindings]]
+key = "Delete"
+chars = "\u001b[P"
+mode = "~AppKeypad"
+
+[[key_bindings]]
+key = "N"
+mods = "Command"
+action = "SpawnNewInstance"
+

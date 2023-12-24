@@ -1,14 +1,13 @@
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/vladislavsomov/.oh-my-zsh
+export ZSH=/Users/vladsomov/.oh-my-zsh
 ZSH_THEME=refined
 
-plugins=(git asdf ruby z last-working-dir wd zsh-syntax-highlighting vi-mode)
+plugins=(git asdf ruby z last-working-dir wd vi-mode)
 # User configuration
 
 source $ZSH/oh-my-zsh.sh
 
 
-export PATH="/Users/vladislavsomov/homebrew/bin:$PATH"
 export EDITOR='nvim'
 
  _gen_fzf_default_opts() {
@@ -235,3 +234,4 @@ gprch() {
   checkurl=$(gh pr checks $prid | column -t | fzf --with-nth=2,3,5 | awk '{print$5}')
   open $checkurl
 }
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
