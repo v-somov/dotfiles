@@ -199,11 +199,6 @@ require("lazy").setup({
 
 	-- LSP plugins
 	"nvim-lua/plenary.nvim",
-	-- "lukas-reineke/lsp-format.nvim",
-	-- {
-	-- tag = "v1.*",
-	-- dependencies = { "neovim/nvim-lspconfig" },
-	-- },
 	{
 		"folke/trouble.nvim",
 		opts = {}, -- for default options, refer to the configuration section for custom setup.
@@ -221,15 +216,7 @@ require("lazy").setup({
 			},
 		},
 	},
-	-- {
-	-- "mason-org/mason.nvim",
-	-- lazy = false,
-	-- opts = {},
-	-- config = function()
-	-- require("mason").setup()
-	-- end,
-	-- },
-	-- "WhoIsSethDaniel/mason-tool-installer.nvim",
+
 	{
 		"mason-org/mason-lspconfig.nvim",
 		dependencies = {
