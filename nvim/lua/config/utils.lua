@@ -105,6 +105,10 @@ M.augroup = function(name, event, fn, ft)
         false
     )
 end
+M.au = function(event, opts)
+    opts['group'] = group
+    return vim.api.nvim_create_autocmd(event, opts)
+end
 
 M.t = function(str)
     return vim.api.nvim_replace_termcodes(str, true, true, true)

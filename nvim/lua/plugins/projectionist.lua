@@ -12,6 +12,7 @@ end
 
 utils.nmap('<leader>.', ':A<cr>')
 utils.nmap('<leader>s.', ':AV<cr>')
+
 global.run_current_test_file = function()
   local prg = vim.api.nvim_buf_get_option(0, 'makeprg')
   runInTerminal(prg)

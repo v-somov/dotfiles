@@ -16,4 +16,17 @@ shift_hyper = {"ctrl","alt","shift"}
 
 col = hs.drawing.color.x11
 
+function appearanceChanged()
+    local appearance = hs.host.interfaceStyle()
+    alert.show("Appearance changed to " .. appearance)
+    if appearance == "Dark" then
+        os.execute("/Users/vladsomov/switch_theme.sh dark")
+    else
+        os.execute("/Users/vladsomov/switch_theme.sh light")
+    end
+end
+
+appearanceWatcher = hs.watchable.new("AppleInterfaceThemeChangedNotification", appearanceChanged)
+appearanceChanged()
+
 alert.show("Hammerspoon loaded!")

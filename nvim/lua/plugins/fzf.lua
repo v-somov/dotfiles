@@ -31,22 +31,26 @@ end
     -- commands.vsplit(selected[2])
 -- end
 
+local trouble_actions = require("trouble.sources.fzf").actions
+
 local file_actions = {
     ["default"] = actions.file_edit_or_qf,
     ["ctrl-t"] = actions.file_tabedit,
     ["ctrl-q"] = actions.file_sel_to_qf,
     ["ctrl-x"] = bonly,
     ["ctrl-r"] = breplace,
+    ["ctrl-t"] = trouble_actions.open
     -- ["ctl-v"] = vsplit,
 }
 
 require("fzf-lua").setup({
     winopts = {
       -- split = 'belowright new',
-      win_height = 0.8,
-      win_width = 0.9,
-      -- win_border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
-      hl_border  = 'NormalFloat',
+      height = 0.8,
+      width = 0.9,
+      border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
+      -- hl_border  = 'NormalFloat',
+      preview_horizontal  = 'right:50%:hidden',
     },
     fzf_opts = {
       ['--ansi']        = '',
@@ -63,10 +67,9 @@ require("fzf-lua").setup({
         ["shift-up"]      = "preview-page-up",
         ["ctrl-d"]        = "half-page-down",
         ["ctrl-b"]        = "half-page-up",
-        ["f4"] = "toggle-preview",
+        ["ctrl-w"] = "toggle-preview",
       },
     },
-    preview_horizontal  = 'right:50%:hidden',
     previewers = {
       bat = {
         cmd             = "bat",
@@ -81,14 +84,15 @@ require("fzf-lua").setup({
     },
     files = {
       prompt = 'Files> ',
-      cmd = 'rg .  --files --no-ignore --hidden --follow -g "Gemfile*" -g ".gitignore" -g "bin/*" -g "*.{vue,lua,ts,tsx,graphql,coffee,haml,hamlc,erb,js,json,rs,go,rb,py,swift,scss,c,yml,yaml,css,md}" -g ".env*" -g "Docker*" -g "Procfile" -g "!{.git,generated,node_modules,dist,vendor,log,swp,tmp,venv,__pychache__,pyc}/*"',
+      cmd = 'rg .  --files --no-ignore --hidden --follow -g ".kamal/**" -g "Gemfile*" -g ".gitignore" -g "bin/*" -g "*.{vue,lua,ts,tsx,graphql,coffee,haml,hamlc,erb,js,json,rs,go,rb,py,swift,scss,c,yml,yaml,css,md,php,svg,png,jpg}" -g ".env*" -g "Docker*" -g "Procfile" -g "!{.git,generated,node_modules,dist,vendor,log,swp,tmp,venv,__pychache__,pyc}/*"',
       actions = file_actions,
       git_icons = false,
       color_icons = false,
     },
     grep = {
       -- only search file content, not names
-      rg_opts = "--hidden --column --line-number --no-heading --color=always --smart-case -g 'Gemfile*' -g '.gitignore' -g 'bin/*' -g '*.{vue,lua,ts,tsx,graphql,coffee,haml,hamlc,erb,js,rs,go,rb,py,swift,scss,c,md,yml,yaml}' -g '.env*' -g 'Docker*' -g 'Procfile' -g '!{.git,**/generated,node_modules,dist,vendor,log,swp,tmp,venv,__pychache__,pyc}/*'",
+      prompt = 'Files Content> ',
+      rg_opts = "--hidden --column --line-number --no-heading --color=always --smart-case -g '.kamal/**' -g 'Gemfile*' -g '.gitignore' -g 'bin/*' -g '*.{vue,lua,ts,tsx,graphql,coffee,haml,hamlc,erb,js,rs,go,rb,py,swift,scss,c,md,yml,yaml,php,svg,png,jpg}' -g '.env*' -g 'Docker*' -g 'Procfile' -g '!{.git,**/generated,node_modules,dist,vendor,log,swp,tmp,venv,__pychache__,pyc}/*'",
       actions = file_actions,
     },
     bcommits = {
@@ -107,11 +111,11 @@ u.lua_command("LspDefSplit", 'require("fzf-lua").lsp_definitions({ sync = true  
 u.lua_command("LspTypeDef", 'require("fzf-lua").lsp_typedefs({ jump_to_single_result = true })')
 u.lua_command("Rg", 'require("fzf-lua").grep({ search = "" })')
 u.lua_command("RgContent", 'require("fzf-lua").grep({ search = "", fzf_cli_args = "--nth 2.." })')
-u.lua_command("BSymbols", "require('fzf-lua').lsp_document_symbols({ fzf_cli_args = '--with-nth 2..' })")
+u.lua_command("BSymbols", "require('fzf-lua').lsp_document_symbols({ ignore_symbols = 'Variable', fzf_cli_args = '--nth 1..' })")
 
 u.command("Files", "FzfLua files")
 
-u.nmap("<c-P>", ":FzfLua files<CR>")
+u.nmap("<C-P>", ":FzfLua files<CR>")
 u.nmap("<Leader>f", ":RgContent<CR>")
 u.nmap("<Leader>l", ":FzfLua live_grep_native<CR>")
 u.nmap(",f", ":Rg<CR>")
@@ -119,11 +123,10 @@ u.nmap("<Leader>wf", ":FzfLua grep_cword<CR>")
 u.nmap("<Leader>rf", ":FzfLua grep_last<CR>")
 u.vmap("<Leader>f", "<ESC> :FzfLua grep_visual<CR>")
 u.nmap("<Leader>b", ":FzfLua buffers<CR>")
-u.nmap("<Leader>cb", ":FzfLua grep_curbuf<CR>")
 u.nmap("<Leader>of", ":FzfLua oldfiles<CR>")
 u.nmap("<Leader>c", ":FzfLua git_bcommits<CR>")
-u.nmap("<Leader>gr", ":LspRefs<CR>")
-u.nmap("<Leader>ga", ":LspActions<CR>")
+u.nmap("<Leader>gr", ":LspRef<CR>")
+u.nmap("<Leader>ga", ":LspAction<CR>")
 u.nmap("<Leader>gd", ":LspDefSplit<CR>")
 u.nmap("<Leader>d", ":BSymbols<CR>")
 u.nmap("<Leader>ca", ":FzfLua lsp_code_actions<CR>")
