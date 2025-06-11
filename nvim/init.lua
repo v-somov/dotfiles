@@ -120,6 +120,10 @@ require("config")
 require("plugins")
 require("theme")
 
+u.nmap(",r<CR>", "*:%s///g<left><left>")
+u.nmap("<Leader>rc<CR>", "*:%s///gc<left><left><left>")
+u.nmap("<Leader>gn<CR>", "*:%s///gn<CR>")
+
 u.nmap("<leader>rg", ":FzfLua live_grep <C-R><C-W><CR>")
 u.vmap("<leader>rg", 'y:FzfLua live_grep <C-R>"<CR>')
 
@@ -132,3 +136,33 @@ u.vmap("p", "p`]", { silent = true })
 u.nmap("p", "p`]", { silent = true })
 
 u.augroup("TypescriptFiletypes", "BufNewFile,BufRead", "*.{ts,tsx}", "vim.opt.filetype=typescript")
+-- u.augroup("RubyFileTypes", "BufNewFile,BufRead", "pryrc", "vim.opt.filetype=ruby")
+vim.api.nvim_create_autocmd("ColorScheme", {
+	pattern = "*",
+	callback = function()
+		if vim.g.colors_name and vim.g.colors_name:lower():find("solarized") then
+			vim.env.BAT_THEME = "Solarized (light)"
+			vim.cmd([[
+				hi! FloatBorder guifg=#268bd2 guibg=#fdf6e3
+				hi! FloatTitle  guifg=#859900 guibg=#fdf6e3 gui=bold
+			]])
+		elseif vim.g.colors_name and vim.g.colors_name:lower():find("nightfox") then
+			vim.env.BAT_THEME = "base16"
+			vim.cmd([[
+				hi! FloatBorder guifg=#ae81ff guibg=#192330
+				hi! FloatTitle  guifg=#ff9e64 guibg=#192330 gui=bold
+			]])
+		else
+			vim.env.BAT_THEME = "OneHalfDark"
+			vim.cmd([[hi! CursorLine guibg=#2e2e2e]])
+		end
+	end,
+})
+vim.cmd("doautocmd ColorScheme")
+
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+	pattern = ".pryrc*",
+	callback = function()
+		vim.bo.filetype = "ruby"
+	end,
+})

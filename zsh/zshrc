@@ -43,11 +43,17 @@ export EDITOR='nvim'
   "
 }
 
-# gen_fzf_default_opts
+  # export FZF_DEFAULT_OPTS="--color=bg+:#fdf6e3,bg:#fdf6e3,spinner:#b58900,hl:#859900 --color=fg:#657b83,header:#859900,info:#268bd2,pointer:#b58900,marker:#b58900,prompt:#268bd2,hl+:#cb4b16"
+# _gen_fzf_default_opts
+# export FZF_DEFAULT_OPTS="--color=bg+:#192330,bg:#192330,spinner:#ae81ff,hl:#ae81ff --color=fg:#c0caf5,header:#ae81ff,info:#7aa2f7,pointer:#ae81ff,marker:#ae81ff,prompt:#7aa2f7,hl+:#ff9e64"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-#export FZF_DEFAULT_OPTS="--color 16,info:6,hl+:1,fg+:10"
+# export FZF_DEFAULT_OPTS="--color 16,info:6,hl+:1,fg+:10"
 # export FZF_DEFAULT_OPTS="--color bg+:#283237,info:6,hl:#DEC77A,hl+:#DA797B,fg+:#81F3DC,pointer:#E64A19,spinner:#673AB7"
-export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
+# # Solarized colors
+# export FZF_DEFAULT_OPTS='
+  # --color=bw
+# '
+export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || bat {} || tree -C {}) 2> /dev/null | head -200'"
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.DS_Store,.git,dist,node_modules,tmp,vendor,venv,__pycache__}/*" 2> /dev/null'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
