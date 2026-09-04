@@ -1,0 +1,73 @@
+onboarding = false
+
+[theme]
+auto_switch = true
+light_name = "solarized-light"
+dark_name = "solarized"
+
+[ui]
+agent_panel_sort = "spaces"
+show_agent_labels_on_pane_borders = true
+hide_tab_bar_when_single_tab = true
+prompt_new_tab_name = false
+
+[ui.toast]
+delivery = "system"
+delay_seconds = 1
+
+[ui.sound]
+enabled = true
+
+[ui.sidebar.agents]
+row_gap = 0
+
+[ui.sidebar.agents.rows_by_agent]
+claude = [["state_icon", "workspace", "$feature"], ["$task"], ["$branch", "agent"]]
+
+# Direct (prefix-less) chords use alt: ctrl+hjkl is consumed by tmux's
+# vim-navigator bindings and never reaches herdr.
+[keys]
+focus_agent = "alt+1..9"
+next_agent = "alt+j"
+previous_agent = "alt+k"
+open_notification_target = "alt+o"
+zoom = "alt+z"
+new_tab = "alt+t"
+
+split_vertical = "prefix+backslash"
+split_horizontal = "prefix+minus"
+last_pane = "prefix+a"
+
+new_workspace = "alt+n"
+new_worktree = "alt+shift+g"
+switch_workspace = "prefix+shift+1..9"
+next_workspace = "prefix+shift+l"
+previous_workspace = "prefix+shift+h"
+open_worktree = "prefix+g"
+
+[[keys.command]]
+key = "alt+g"
+type = "popup"
+command = "lazygit"
+width = "80%"
+height = "80%"
+
+# `ccw` is a zsh alias; herdr runs commands without the interactive rc, so
+# bind the expansion instead.
+[[keys.command]]
+key = "alt+c"
+type = "pane"
+command = "env CLAUDE_CONFIG_DIR=/Users/vladsomov/.claude-work /Users/vladsomov/.local/bin/claude"
+
+[[keys.command]]
+key = "alt+a"
+type = "popup"
+command = "/Users/vladsomov/.config/herdr/scripts/agent-switch.sh"
+width = "80%"
+height = "60%"
+
+[session]
+resume_agents_on_restore = true
+
+[advanced]
+scrollback_limit_bytes = 25000000
