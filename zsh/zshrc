@@ -299,6 +299,13 @@ export _ZO_EXCLUDE_DIRS=("$HOME/.cache")
 export PATH="/Users/vladsomov/.codeium/windsurf/bin:$PATH"
 
 [[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
+# herdr zsh completion, cached because the generated script is ~1.7k lines.
+# Regenerates when the herdr binary is newer than the cache (after `herdr update`).
+if command -v herdr >/dev/null; then
+  [[ -d ~/.zsh/completions ]] || mkdir -p ~/.zsh/completions
+  [[ ~/.zsh/completions/_herdr -nt "$(command -v herdr)" ]] || herdr completion zsh > ~/.zsh/completions/_herdr
+  fpath=(~/.zsh/completions $fpath)
+fi
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
 fpath=(/Users/vladsomov/.docker/completions $fpath)
 autoload -Uz compinit
@@ -306,6 +313,22 @@ compinit
 # End of Docker CLI completions
 
 # Claude Code shortcuts
+# `claude` picks the account from the working directory: the work config for the
+# prefixes below, the default (personal) config otherwise. An explicit
+# CLAUDE_CONFIG_DIR always wins. Personal deliberately leaves the variable unset:
+# pointing it at ~/.claude selects a profile that is not logged in.
+CLAUDE_WORK_PATHS=(~/Developer/SE ~/Developer/adm ~/Developer/obsidian/work ~/Developer/gitlab-mr-bot ~/Developer/mrq)
+_claude_config_dir() {
+  [[ -n "$CLAUDE_CONFIG_DIR" ]] && { print -r -- "$CLAUDE_CONFIG_DIR"; return; }
+  local p
+  for p in "${CLAUDE_WORK_PATHS[@]}"; do
+    [[ "$PWD" == "$p" || "$PWD" == "$p"/* ]] && { print -r -- "$HOME/.claude-work"; return; }
+  done
+}
+claude() {
+  local dir; dir=$(_claude_config_dir)
+  if [[ -n "$dir" ]]; then CLAUDE_CONFIG_DIR="$dir" command claude "$@"; else command claude "$@"; fi
+}
 co() { cd ~/Developer/obsidian/work && claude; }
 dcc() { cd ~/Developer && claude; }
 alias ccw='CLAUDE_CONFIG_DIR=$HOME/.claude-work claude'
