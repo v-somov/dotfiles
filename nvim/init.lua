@@ -1,27 +1,27 @@
 local u = require("config.utils")
 
 local disabledPlugins = {
-	"netrw",
-	"netrwPlugin",
-	"netrwSettings",
-	"netrwFileHandlers",
-	"gzip",
-	"zip",
-	"zcpPlugin",
-	"tar",
-	"tarPlugin",
-	"getscript",
-	"getscriptPlugin",
-	"vimball",
-	"vimballPlugin",
-	"2html_plugin",
-	"logipat",
-	"rrhelper",
-	"spellfile_plugin",
+  "netrw",
+  "netrwPlugin",
+  "netrwSettings",
+  "netrwFileHandlers",
+  "gzip",
+  "zip",
+  "zcpPlugin",
+  "tar",
+  "tarPlugin",
+  "getscript",
+  "getscriptPlugin",
+  "vimball",
+  "vimballPlugin",
+  "2html_plugin",
+  "logipat",
+  "rrhelper",
+  "spellfile_plugin",
 }
 
 for _, plugin in pairs(disabledPlugins) do
-	vim.g["loaded_" .. plugin] = 1
+  vim.g["loaded_" .. plugin] = 1
 end
 
 vim.g.mapleader = " "
@@ -83,7 +83,7 @@ u.nmap("<right>", "3<C-W>>")
 
 u.cmap("%%", "expand('%:h').'/'", { expr = true })
 u.nmap("<leader>cd", ":lcd %:p:h<CR>:pwd<CR>")
-u.nmap("<leader><leader>", ":e #<CR>")
+-- u.nmap("<leader><leader>", ":e #<CR>")
 
 u.nmap("<Leader>w", ":w<CR>")
 u.nmap("<Leader>q", ":wq<CR>")
@@ -106,6 +106,9 @@ vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+Y]])
 
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
+
+u.nmap("<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
+u.nmap("<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 
 vim.keymap.set("n", "<C-s>", vim.lsp.buf.format)
 
@@ -138,31 +141,31 @@ u.nmap("p", "p`]", { silent = true })
 u.augroup("TypescriptFiletypes", "BufNewFile,BufRead", "*.{ts,tsx}", "vim.opt.filetype=typescript")
 -- u.augroup("RubyFileTypes", "BufNewFile,BufRead", "pryrc", "vim.opt.filetype=ruby")
 vim.api.nvim_create_autocmd("ColorScheme", {
-	pattern = "*",
-	callback = function()
-		if vim.g.colors_name and vim.g.colors_name:lower():find("solarized") then
-			vim.env.BAT_THEME = "Solarized (light)"
-			vim.cmd([[
+  pattern = "*",
+  callback = function()
+    if vim.g.colors_name and vim.g.colors_name:lower():find("solarized") then
+      vim.env.BAT_THEME = "Solarized (light)"
+      vim.cmd([[
 				hi! FloatBorder guifg=#268bd2 guibg=#fdf6e3
 				hi! FloatTitle  guifg=#859900 guibg=#fdf6e3 gui=bold
 			]])
-		elseif vim.g.colors_name and vim.g.colors_name:lower():find("nightfox") then
-			vim.env.BAT_THEME = "base16"
-			vim.cmd([[
+    elseif vim.g.colors_name and vim.g.colors_name:lower():find("nightfox") then
+      vim.env.BAT_THEME = "base16"
+      vim.cmd([[
 				hi! FloatBorder guifg=#ae81ff guibg=#192330
 				hi! FloatTitle  guifg=#ff9e64 guibg=#192330 gui=bold
 			]])
-		else
-			vim.env.BAT_THEME = "OneHalfDark"
-			vim.cmd([[hi! CursorLine guibg=#2e2e2e]])
-		end
-	end,
+    else
+      vim.env.BAT_THEME = "OneHalfDark"
+      vim.cmd([[hi! CursorLine guibg=#2e2e2e]])
+    end
+  end,
 })
 vim.cmd("doautocmd ColorScheme")
 
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-	pattern = ".pryrc*",
-	callback = function()
-		vim.bo.filetype = "ruby"
-	end,
+  pattern = ".pryrc*",
+  callback = function()
+    vim.bo.filetype = "ruby"
+  end,
 })

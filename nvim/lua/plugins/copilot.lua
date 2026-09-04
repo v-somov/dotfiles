@@ -2,12 +2,10 @@ local utils = require("config.utils")
 
 -- Copilot chat
 local chat = require("CopilotChat")
-local actions = require("CopilotChat.actions")
 local select = require("CopilotChat.select")
-local integration = require("CopilotChat.integrations.fzflua")
 
 chat.setup({
-	model = "claude-3.7-sonnet",
+	model = "gpt-4.1",
 	selection = function(source)
 		return select.visual(source) or select.buffer(source)
 	end,
@@ -104,7 +102,7 @@ vim.keymap.set({ "n" }, "<leader>ax", chat.reset, { desc = "AI Reset" })
 vim.keymap.set({ "n" }, "<leader>as", chat.stop, { desc = "AI Stop" })
 vim.keymap.set({ "n" }, "<leader>am", chat.select_model, { desc = "AI Model" })
 vim.keymap.set({ "n", "v" }, "<leader>ap", function()
-	integration.pick(actions.prompt_actions(), {
+	chat.select_prompt({
 		fzf_tmux_opts = {
 			["-d"] = "45%",
 		},
@@ -119,3 +117,18 @@ vim.keymap.set({ "n", "v" }, "<leader>aq", function()
 		end
 	end)
 end, { desc = "AI Question" })
+
+vim.keymap.set({ "n", "v" }, "<leader>ccq", function()
+	local input = vim.fn.input("Quick Chat: ")
+	if input ~= "" then
+		require("CopilotChat").ask(input, {
+			selection = require("CopilotChat.select").buffer,
+		})
+	end
+end)
+
+vim.keymap.set("i", "<C-j>", 'copilot#Accept("\\<CR>")', {
+	expr = true,
+	replace_keycodes = false,
+	desc = "Accept Copilot suggestion",
+})

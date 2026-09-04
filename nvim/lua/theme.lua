@@ -1,2 +1,2 @@
-vim.o.background = "dark" -- or "light"
-vim.cmd.colorscheme("nightfox") -- or solarized, etc.
+vim.o.background = "light" -- or "light"
+vim.cmd.colorscheme("solarized8") -- or solarized, etc.
