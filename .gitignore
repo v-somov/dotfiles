@@ -4,3 +4,5 @@ vimconfig/vim/.netrwhist
 
 hammerspoon/websites.lua
 hammerspoon/Spoons/*
+
+.DS_Store
