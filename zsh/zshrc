@@ -2,12 +2,19 @@
 export ZSH=/Users/vladsomov/.oh-my-zsh
 # ZSH_THEME=refined
 
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+
+export JAVA_HOME="$(brew --prefix openjdk)/libexec/openjdk.jdk/Contents/Home"
 plugins=(git asdf ruby z last-working-dir wd vi-mode fzf-tab gh aliases)
+source $ZSH/oh-my-zsh.sh
+unalias gsd
+
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 # User configuration
 
-source $ZSH/oh-my-zsh.sh
 
+# Uv tool installation path
+export PATH="$HOME/.local/bin:$PATH"
 
 export EDITOR='nvim'
 
@@ -97,9 +104,9 @@ fgba() {
   alias fproc="ps aux| grep"
   alias kill_all="pkill -9 -f"
 
-  # alias nv="arch -arm64 ~/nvim-macos/bin/nvim"
   alias nv="arch -arm64 nvim"
   alias dv="arch -arm64 ~/Developer/nvim-macos/bin/nvim -u ~/.config/nvim-dev/init.lua"
+  alias lnv="NVIM_APPNAME=nvim-lazyvim ~/nvim-macos-arm64/bin/nvim"
   alias bundle="arch -arm64 bundle"
   alias rails="arch -arm64 rails"
   alias brew="arch -arm64 brew"
@@ -290,3 +297,37 @@ export _ZO_EXCLUDE_DIRS=("$HOME/.cache")
 
 # Added by Windsurf
 export PATH="/Users/vladsomov/.codeium/windsurf/bin:$PATH"
+
+[[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/vladsomov/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions
+
+# Claude Code shortcuts
+co() { cd ~/Developer/obsidian/work && claude; }
+dcc() { cd ~/Developer && claude; }
+alias ccw='CLAUDE_CONFIG_DIR=$HOME/.claude-work claude'
+alias ccp='CLAUDE_CONFIG_DIR=$HOME claude'
+
+
+# Lazygit
+alias lg="lazygit"
+alias lzd="lazydocker"
+
+
+
+
+
+
+
+# bun completions
+[ -s "/Users/vladsomov/.bun/_bun" ] && source "/Users/vladsomov/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# opencode
+export PATH=/Users/vladsomov/.opencode/bin:$PATH

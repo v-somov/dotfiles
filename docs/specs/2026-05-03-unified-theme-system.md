@@ -4,7 +4,7 @@
 Replace the existing hardcoded dark/light file-copy switcher with a flexible, Base16-based theme engine that:
 1. Supports **any number of named themes** downloaded from the internet (not just dark/light)
 2. Generates all tool configs from a **single source of truth** (a Base16 palette YAML)
-3. Covers: alacritty, tmux, zsh/fzf, neovim, eza, oh-my-posh, Claude Code, and OpenCode
+3. Covers: alacritty, tmux, zsh/fzf, neovim, eza, oh-my-posh, and Claude Code (OpenCode deferred — see Out of Scope)
 4. Provides a simple CLI: `theme set <name>` and `theme list`
 
 ---
@@ -130,16 +130,40 @@ Uses base16 colors for segments. The template maps `base00`–`base0F` to palett
 
 ## Tool-Specific Handling
 
-| Tool | Generation Method | Reload Strategy |
-|---|---|---|
-| **Alacritty** | Generated TOML → `~/.config/alacritty/alacritty.toml` | Live reload (no restart) |
-| **Tmux** | Generated conf → sourced via `tmux source-file` | `tmux source-file <path>` |
-| **ZSH / FZF** | Generated shell snippet → sourced in `.zshrc` | New shells pick it up; current shell: `source` |
-| **Eza** | Generated YAML → `~/.config/eza/theme.yml` | Live on next `eza` invocation |
-| **Oh-My-Posh** | Generated JSON → `--config` path | New shells pick it up |
-| **Neovim** | **Not generated.** Instead, set `vim.g.colors_name` in `theme.lua` based on a theme→colorscheme mapping | `:colorscheme <name>` or reload |
-| **Claude Code** | JSON edit: `settings.json` `"theme": "dark"` or `"light"` | Restart or settings reload |
-| **OpenCode** | JSON edit: `opencode.json` if it supports theme | Check support |
+| Tool | Template | Generated Path | Install / Source Location | Reload Strategy |
+|---|---|---|---|---|
+| **Alacritty** | `alacritty.toml.j2` | `theme/generated/alacritty.toml` | `~/.config/alacritty/alacritty.toml` (symlinked) | Live reload (no restart) |
+| **Tmux** | `tmux.conf.j2` | `theme/generated/tmux.conf` | Sourced from `~/dotfiles/tmux.conf` via `source-file` | `tmux source-file <path>` |
+| **ZSH / FZF** | `fzf.zsh.j2` | `theme/generated/fzf.zsh` | Sourced from `~/.zshrc` | See "Active Shell Reload" below |
+| **Eza** | `eza.yml.j2` | `theme/generated/eza.yml` | `~/.config/eza/theme.yml` (symlinked) | Live on next `eza` invocation |
+| **Oh-My-Posh** | `oh-my-posh.json.j2` | `theme/generated/oh-my-posh.json` | `--config` flag in `.zshrc` points here | New shells pick it up |
+| **Neovim** | (mapping, not template) | `~/dotfiles/nvim/lua/theme.lua` | Loaded by nvim init | `:luafile` or restart |
+| **Claude Code** | (JSON edit, not template) | `~/.claude/settings.json` `"theme"` field | In place | Restart or settings reload |
+
+### Alacritty Path Migration
+The current `switch_theme.sh` writes to `~/.alacritty.toml` (home dir, legacy). The new system uses `~/.config/alacritty/alacritty.toml` (XDG-compliant). Migration step removes `~/.alacritty.toml` and creates a symlink at the new path.
+
+### Claude Code Theme Map
+Claude Code supports: `dark`, `light`, `dark-daltonized`, `light-daltonized`, `dark-ansi`, `light-ansi`. The generator maps from the Base16 `variant` field:
+```python
+CLAUDE_THEME_MAP = {"dark": "dark", "light": "light"}  # extend if scheme overrides
+```
+A scheme YAML can override with an optional `claude_theme:` field if the user wants a non-default mapping.
+
+### Active Shell Reload
+`theme set` cannot source files into the parent shell. The fix: ship a zsh function (in `~/dotfiles/zsh/theme.zsh`) that wraps the Python CLI:
+
+```zsh
+theme() {
+  python3 ~/dotfiles/theme/theme.py "$@" || return $?
+  if [[ "$1" == "set" ]]; then
+    source ~/dotfiles/theme/generated/fzf.zsh
+    [[ -n "$TMUX" ]] && tmux source-file ~/dotfiles/theme/generated/tmux.conf
+  fi
+}
+```
+
+The Python script never calls `source` itself — that's the wrapper's job.
 
 ### Neovim Mapping
 Instead of generating nvim colors (which is brittle), we maintain a mapping:
@@ -197,6 +221,15 @@ Base16 schemes often ship as pairs (e.g., `solarized-dark.yml`, `solarized-light
 
 If a tool (like Claude Code) only supports `"dark"` / `"light"` strings, the generator reads `variant` from the YAML and maps accordingly.
 
+### Missing Variant Field
+If a downloaded scheme YAML omits `variant`, the generator fails loudly with a clear error:
+```
+Error: theme 'foo.yml' is missing required field 'variant' (must be "dark" or "light").
+       Add `variant: dark` (or `light`) to the YAML, or pass --infer-variant
+       to derive it from base00 luminance.
+```
+The `--infer-variant` flag computes luminance from `base00` and picks `dark` if < 0.5, else `light`. Default is fail-fast — inference is opt-in to avoid silently mis-tagging schemes.
+
 ---
 
 ## Integration with Existing Switcher
@@ -229,15 +262,27 @@ Or better: map `<leader>tt` to a fuzzy picker of available themes.
 4. **Write templates** for alacritty, tmux, fzf, eza, oh-my-posh
 5. **Add `theme/generated/` to `.gitignore`**
 6. **Migrate existing configs** into templates using current dark/light colors as reference
-6. **Download 3–4 Base16 schemes** to populate `themes/`
-7. **Replace `switch_theme.sh`** and update nvim plugin
-8. **Update `.zshrc`** to source generated `fzf.zsh`
-9. **Test each tool** with `theme set <name>`
+7. **Download 3–4 Base16 schemes** to populate `themes/`
+8. **Bootstrap**: add `python3 ~/dotfiles/theme/theme.py set <default>` to `install/` script so a fresh clone has generated files before `.zshrc` runs. Also: `.zshrc` should guard the source line with `[[ -f ... ]]` to avoid breaking on first shell.
+9. **Migrate alacritty path**: remove `~/.alacritty.toml`, symlink `~/.config/alacritty/alacritty.toml` → generated file, update any alacritty include paths.
+10. **Add the `theme()` zsh wrapper** (see "Active Shell Reload" above) to `~/dotfiles/zsh/theme.zsh` and source it from `.zshrc`.
+11. **Replace `switch_theme.sh`** and update nvim plugin to call the new CLI.
+12. **Update `.zshrc`** to source generated `fzf.zsh` and point oh-my-posh `--config` at the generated JSON.
+13. **Test each tool** with `theme set <name>`.
+
+---
+
+## Tradeoffs
+
+**Breadth over depth.** Base16 gives you 16 colors. Tools with richer color schemas (eza has ~40 file-kind/permission/git slots; oh-my-posh segments map flexibly) lose nuance compared to a hand-tuned per-tool theme. The win is that *any* downloaded Base16 scheme works everywhere instantly — the loss is that no single theme will be as polished as a bespoke `tokyonight.yml` from upstream. This is the right tradeoff for "many themes, one source of truth."
+
+**Jinja2 vs. stdlib.** Templates are simple `{{ baseXX }}` substitution — `string.Template` would suffice without the dep. We use Jinja2 anyway for: future conditionals (e.g., `{% if variant == "dark" %}`), better error messages, and the marginal cost of one extra pip install. If `theme.py` stays trivial, this is reversible.
 
 ---
 
 ## Out of Scope
 
+- **OpenCode integration.** Defer until OpenCode confirms a stable theme settings API. Re-evaluate after initial rollout.
 - **Dynamic OS theme sync** (follow macOS light/dark mode). Can be added later via a launchd agent calling `theme.py`.
 - **Automatic scheme downloading** from the internet. User downloads YAMLs manually (or we add a `theme fetch <url>` later).
 - **Neovim highlight group generation.** We delegate to existing colorscheme plugins.
