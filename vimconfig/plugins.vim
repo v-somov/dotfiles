@@ -46,7 +46,7 @@ Plugin 'valloric/youcompleteme'
   let g:ycm_collect_identifiers_from_comments_and_strings = 0
   let g:ycm_seed_identifiers_with_syntax = 0
   let g:ycm_register_as_syntastic_checker = 0
-  let g:ycm_path_to_python_interpreter = '/usr/local/bin/python3'
+  let g:ycm_path_to_python_interpreter = exepath('python3')
 "Plugin 'AutoComplPop'
 "Themes
 "Plugin 'trevordmiller/nova-vim'

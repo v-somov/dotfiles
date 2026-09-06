@@ -377,11 +377,11 @@ require("lazy").setup({
       workspaces = {
         {
           name = "personal",
-          path = "/Users/vladsomov/Library/Mobile Documents/com~apple~CloudDocs/personal-vault/personal",
+          path = vim.fn.expand("~/Library/Mobile Documents/com~apple~CloudDocs/personal-vault/personal"),
         },
         {
           name = "work",
-          path = "/Users/vladsomov/Library/Mobile Documents/com~apple~CloudDocs/personal-vault/work",
+          path = vim.fn.expand("~/Library/Mobile Documents/com~apple~CloudDocs/personal-vault/work"),
         },
       },
 

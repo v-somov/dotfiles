@@ -297,6 +297,7 @@ endfor
 " ## end of OPAM user-setup addition for vim / base ## keep this line
 " ## added by OPAM user-setup for vim / ocp-indent ## d15857f7143dafc7a27a7a0f099b8f7d ## you can edit, but keep this line
 if count(s:opam_available_tools,"ocp-indent") == 0
-  source "/Users/vladsomov/.opam/default/share/ocp-indent/vim/indent/ocaml.vim"
+  let s:ocp_indent = expand("~/.opam/default/share/ocp-indent/vim/indent/ocaml.vim")
+  if filereadable(s:ocp_indent) | execute "source" fnameescape(s:ocp_indent) | endif
 endif
 " ## end of OPAM user-setup addition for vim / ocp-indent ## keep this line

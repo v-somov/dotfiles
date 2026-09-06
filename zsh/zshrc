@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/vladsomov/.oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
 # ZSH_THEME=refined
 
 export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
@@ -257,15 +257,20 @@ gprch() {
   checkurl=$(gh pr checks $prid | column -t | fzf --with-nth=2,3,5 | awk '{print$5}')
   open $checkurl
 }
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# Homebrew prefix differs between Apple Silicon and Intel, and the plugin may
+# not be installed yet on a fresh machine.
+for p in /opt/homebrew /usr/local; do
+  [ -r "$p/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] &&
+    source "$p/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" && break
+done
 
 
 
 # Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/vladsomov/.lmstudio/bin"
+export PATH="$PATH:$HOME/.lmstudio/bin"
 
 # pnpm
-export PNPM_HOME="/Users/vladsomov/Library/pnpm"
+export PNPM_HOME="$HOME/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
@@ -296,7 +301,7 @@ export _ZO_EXCLUDE_DIRS=("$HOME/.cache")
 
 
 # Added by Windsurf
-export PATH="/Users/vladsomov/.codeium/windsurf/bin:$PATH"
+export PATH="$HOME/.codeium/windsurf/bin:$PATH"
 
 [[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
 # herdr zsh completion, cached because the generated script is ~1.7k lines.
@@ -307,7 +312,7 @@ if command -v herdr >/dev/null; then
   fpath=(~/.zsh/completions $fpath)
 fi
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=(/Users/vladsomov/.docker/completions $fpath)
+fpath=($HOME/.docker/completions $fpath)
 autoload -Uz compinit
 compinit
 # End of Docker CLI completions
@@ -338,11 +343,11 @@ alias lzd="lazydocker"
 
 
 # bun completions
-[ -s "/Users/vladsomov/.bun/_bun" ] && source "/Users/vladsomov/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # opencode
-export PATH=/Users/vladsomov/.opencode/bin:$PATH
+export PATH=$HOME/.opencode/bin:$PATH

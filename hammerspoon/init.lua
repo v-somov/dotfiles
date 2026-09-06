@@ -20,9 +20,9 @@ function appearanceChanged()
     local appearance = hs.host.interfaceStyle() or "Light"
     alert.show("Appearance changed to " .. appearance)
     if appearance == "Dark" then
-        os.execute("/Users/vladsomov/switch_theme.sh dark")
+        os.execute(os.getenv("HOME") .. "/dotfiles/scripts/switch_theme.sh dark")
     else
-        os.execute("/Users/vladsomov/switch_theme.sh light")
+        os.execute(os.getenv("HOME") .. "/dotfiles/scripts/switch_theme.sh light")
     end
 end
 

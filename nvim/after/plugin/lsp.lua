@@ -14,7 +14,7 @@ end
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 vim.lsp.config("ruby_lsp", {
-  cmd = { "/Users/vladsomov/.asdf/shims/ruby-lsp" },
+  cmd = { vim.fn.expand("~/.asdf/shims/ruby-lsp") },
   capabilities = capabilities,
   on_attach = on_attach,
 })
