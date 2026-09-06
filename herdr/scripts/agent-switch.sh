@@ -3,7 +3,7 @@
 # Attention-first ordering: blocked, done, working, idle.
 set -euo pipefail
 
-HERDR=/Users/vladsomov/.local/bin/herdr
+HERDR=$(command -v herdr || printf %s "$HOME/.local/bin/herdr")
 
 workspaces=$("$HERDR" workspace list)
 

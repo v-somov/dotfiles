@@ -54,17 +54,18 @@ width = "80%"
 height = "80%"
 
 # herdr runs [[keys.command]] entries without an interactive shell, so a zsh
-# alias or function is not visible here. The script picks the account from the
-# pane's cwd and execs the real binary.
+# alias or function is not visible here. Commands are resolved from PATH, so
+# these name scripts that `install` symlinks into ~/.local/bin.
+# claude-account picks the account from the pane's cwd, then execs claude.
 [[keys.command]]
 key = "alt+c"
 type = "pane"
-command = "/Users/vladsomov/.config/herdr/scripts/claude-account.sh"
+command = "claude-account"
 
 [[keys.command]]
 key = "alt+a"
 type = "popup"
-command = "/Users/vladsomov/.config/herdr/scripts/agent-switch.sh"
+command = "herdr-agent-switch"
 width = "80%"
 height = "60%"
 

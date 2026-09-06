@@ -27,6 +27,11 @@ mkdir -p ~/.config/herdr
 ln -sf ~/dotfiles/herdr/config.toml ~/.config/herdr/config.toml
 ln -sfn ~/dotfiles/herdr/scripts    ~/.config/herdr/scripts
 
+# herdr resolves [[keys.command]] entries from PATH, so these are named commands.
+mkdir -p ~/.local/bin
+ln -sf ~/dotfiles/herdr/scripts/claude-account.sh ~/.local/bin/claude-account
+ln -sf ~/dotfiles/herdr/scripts/agent-switch.sh   ~/.local/bin/herdr-agent-switch
+
 ln -sf ~/dotfiles/zsh/zshrc         ~/.zshrc
 
 # vundle

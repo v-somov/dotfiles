@@ -313,11 +313,14 @@ compinit
 # End of Docker CLI completions
 
 # Claude Code shortcuts
-# `claude` picks the account from the working directory. The rule lives in
-# ~/dotfiles/herdr/scripts/claude-account.sh so the herdr alt+c binding, which
-# runs without an interactive shell, applies the same one. An explicit
-# CLAUDE_CONFIG_DIR always wins, so ccw/ccp below keep working.
-claude() { ~/.config/herdr/scripts/claude-account.sh "$@" }
+# `claude` picks the account from the working directory. The rule lives in the
+# claude-account script so the herdr alt+c binding, which runs without an
+# interactive shell, applies the same one. An explicit CLAUDE_CONFIG_DIR always
+# wins, so ccw/ccp below keep working. Falls back to the plain binary on a
+# machine where `install` has not linked the script yet.
+claude() {
+  if command -v claude-account >/dev/null; then claude-account "$@"; else command claude "$@"; fi
+}
 co() { cd ~/Developer/obsidian/work && claude; }
 dcc() { cd ~/Developer && claude; }
 alias ccw='CLAUDE_CONFIG_DIR=$HOME/.claude-work claude'

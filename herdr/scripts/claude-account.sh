@@ -5,29 +5,40 @@
 # rather than in zshrc because the herdr alt+c binding runs its command without
 # an interactive shell, so a zsh function or alias is not visible there.
 #
-# An inherited CLAUDE_CONFIG_DIR always wins, which keeps `ccw`/`ccp` and any
-# explicit env prefix working. Personal deliberately leaves the variable unset:
-# the default profile is the personal account, and pointing the variable at
-# ~/.claude would select a profile that is not logged in.
+# Which directories count as work is machine-specific and stays out of this
+# public repo. List them one per line in the paths file below; blank lines and
+# lines starting with # are ignored, and a leading ~/ is expanded:
+#
+#     ~/src/acme
+#     ~/notes/work
+#
+# With no paths file every directory is personal, which is the safe default.
+#
+# An inherited CLAUDE_CONFIG_DIR always wins, which keeps an explicit env prefix
+# and the ccw/ccp aliases working.
 
-CLAUDE_WORK_PATHS="
-$HOME/Developer/SE
-$HOME/Developer/adm
-$HOME/Developer/obsidian/work
-$HOME/Developer/gitlab-mr-bot
-$HOME/Developer/mrq
-"
+paths_file=${CLAUDE_ACCOUNT_PATHS:-${XDG_CONFIG_HOME:-$HOME/.config}/claude-account/work-paths}
+work_dir=${CLAUDE_WORK_CONFIG_DIR:-$HOME/.claude-work}
 
-if [ -z "$CLAUDE_CONFIG_DIR" ]; then
-  for p in $CLAUDE_WORK_PATHS; do
-    case "$PWD" in
-      "$p" | "$p"/*)
-        CLAUDE_CONFIG_DIR="$HOME/.claude-work"
+if [ -z "$CLAUDE_CONFIG_DIR" ] && [ -r "$paths_file" ]; then
+  while IFS= read -r prefix || [ -n "$prefix" ]; do
+    case $prefix in
+      '' | \#*) continue ;;
+      '~/'*) prefix="$HOME/${prefix#\~/}" ;;
+    esac
+    case $PWD in
+      "$prefix" | "$prefix"/*)
+        CLAUDE_CONFIG_DIR=$work_dir
         export CLAUDE_CONFIG_DIR
         break
         ;;
     esac
-  done
+  done < "$paths_file"
 fi
 
-exec "$HOME/.local/bin/claude" "$@"
+# Resolved rather than bare, so `ps` still shows the real binary path.
+claude_bin=$(command -v claude) || {
+  echo "claude-account: claude not found in PATH" >&2
+  exit 127
+}
+exec "$claude_bin" "$@"
