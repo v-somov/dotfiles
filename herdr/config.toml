@@ -53,12 +53,13 @@ command = "lazygit"
 width = "80%"
 height = "80%"
 
-# `ccw` is a zsh alias; herdr runs commands without the interactive rc, so
-# bind the expansion instead.
+# herdr runs [[keys.command]] entries without an interactive shell, so a zsh
+# alias or function is not visible here. The script picks the account from the
+# pane's cwd and execs the real binary.
 [[keys.command]]
 key = "alt+c"
 type = "pane"
-command = "env CLAUDE_CONFIG_DIR=/Users/vladsomov/.claude-work /Users/vladsomov/.local/bin/claude"
+command = "/Users/vladsomov/.config/herdr/scripts/claude-account.sh"
 
 [[keys.command]]
 key = "alt+a"
