@@ -50,6 +50,21 @@ require("lazy").setup({
   },
   { "lifepillar/vim-solarized8", branch = "neovim" },
   { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  -- Follows the macOS appearance live, like Ghostty and herdr.
+  {
+    "f-person/auto-dark-mode.nvim",
+    opts = {
+      set_dark_mode = function()
+        vim.o.background = "dark"
+        vim.cmd.colorscheme("catppuccin-macchiato")
+      end,
+      set_light_mode = function()
+        vim.o.background = "light"
+        vim.cmd.colorscheme("solarized8")
+      end,
+      update_interval = 3000,
+    },
+  },
   "rebelot/kanagawa.nvim",
   "morhetz/gruvbox",
   "Shatur/neovim-ayu",
@@ -835,4 +850,3 @@ require("lazy").setup({
   require("plugins.lazygit"),
 })
 
-require("plugins.theme-switcher")
