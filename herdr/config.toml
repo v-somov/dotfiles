@@ -3,7 +3,7 @@ onboarding = false
 [theme]
 auto_switch = true
 light_name = "solarized-light"
-dark_name = "solarized"
+dark_name = "catppuccin"
 
 [ui]
 agent_panel_sort = "spaces"
@@ -34,6 +34,7 @@ previous_agent = "alt+k"
 open_notification_target = "alt+o"
 zoom = "alt+z"
 new_tab = "alt+t"
+switch_tab = ["prefix+1..9", "cmd+1..9"]
 
 split_vertical = "prefix+backslash"
 split_horizontal = "prefix+minus"
