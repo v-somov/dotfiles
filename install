@@ -26,6 +26,9 @@ ln -sf ~/dotfiles/nvim/init.vim     ~/.config/nvim/init.vim
 mkdir -p ~/.config/ghostty
 ln -sf ~/dotfiles/ghostty/config     ~/.config/ghostty/config
 
+mkdir -p ~/.config/bat
+ln -sf ~/dotfiles/bat/config         ~/.config/bat/config
+
 mkdir -p ~/.config/herdr
 ln -sf ~/dotfiles/herdr/config.toml ~/.config/herdr/config.toml
 ln -sfn ~/dotfiles/herdr/scripts    ~/.config/herdr/scripts
@@ -37,6 +40,7 @@ ln -sf ~/dotfiles/herdr/scripts/agent-switch.sh   ~/.local/bin/herdr-agent-switc
 ln -sf ~/dotfiles/herdr/scripts/claude-work.sh     ~/.local/bin/claude-work
 ln -sf ~/dotfiles/herdr/scripts/claude-personal.sh ~/.local/bin/claude-personal
 ln -sf ~/dotfiles/herdr/scripts/claude-tab.sh      ~/.local/bin/herdr-claude-tab
+ln -sf ~/dotfiles/git/delta-auto.sh                ~/.local/bin/delta-auto
 
 ln -sf ~/dotfiles/zsh/zshrc         ~/.zshrc
 
