@@ -37,7 +37,7 @@ close_pane = ["prefix+x", "alt+x"]
 open_notification_target = "alt+o"
 zoom = "alt+f"
 new_tab = "alt+t"
-switch_tab = ["prefix+1..9", "cmd+1..9"]
+switch_tab = ["prefix+1..9", "ctrl+1..9"]
 
 split_vertical = "prefix+backslash"
 split_horizontal = "prefix+minus"
