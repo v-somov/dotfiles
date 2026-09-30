@@ -23,6 +23,9 @@ ln -sf ~/dotfiles/vimconfig/vim     ~/.vim
 ln -sf ~/dotfiles/vimconfig/xvimrc  ~/.xvimrc
 ln -sf ~/dotfiles/nvim/init.vim     ~/.config/nvim/init.vim
 
+mkdir -p ~/.config/ghostty
+ln -sf ~/dotfiles/ghostty/config     ~/.config/ghostty/config
+
 mkdir -p ~/.config/herdr
 ln -sf ~/dotfiles/herdr/config.toml ~/.config/herdr/config.toml
 ln -sfn ~/dotfiles/herdr/scripts    ~/.config/herdr/scripts
