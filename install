@@ -34,6 +34,9 @@ ln -sfn ~/dotfiles/herdr/scripts    ~/.config/herdr/scripts
 mkdir -p ~/.local/bin
 ln -sf ~/dotfiles/herdr/scripts/claude-account.sh ~/.local/bin/claude-account
 ln -sf ~/dotfiles/herdr/scripts/agent-switch.sh   ~/.local/bin/herdr-agent-switch
+ln -sf ~/dotfiles/herdr/scripts/claude-work.sh     ~/.local/bin/claude-work
+ln -sf ~/dotfiles/herdr/scripts/claude-personal.sh ~/.local/bin/claude-personal
+ln -sf ~/dotfiles/herdr/scripts/claude-tab.sh      ~/.local/bin/herdr-claude-tab
 
 ln -sf ~/dotfiles/zsh/zshrc         ~/.zshrc
 
