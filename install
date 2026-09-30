@@ -21,7 +21,8 @@ ln -sf ~/dotfiles/hammerspoon     ~/.hammerspoon
 ln -sf ~/dotfiles/vimconfig/vimrc   ~/.vimrc
 ln -sf ~/dotfiles/vimconfig/vim     ~/.vim
 ln -sf ~/dotfiles/vimconfig/xvimrc  ~/.xvimrc
-ln -sf ~/dotfiles/nvim/init.vim     ~/.config/nvim/init.vim
+mkdir -p ~/.config
+ln -sfn ~/dotfiles/nvim             ~/.config/nvim
 
 mkdir -p ~/.config/ghostty
 ln -sf ~/dotfiles/ghostty/config     ~/.config/ghostty/config
@@ -43,13 +44,3 @@ ln -sf ~/dotfiles/herdr/scripts/claude-tab.sh      ~/.local/bin/herdr-claude-tab
 ln -sf ~/dotfiles/git/delta-auto.sh                ~/.local/bin/delta-auto
 
 ln -sf ~/dotfiles/zsh/zshrc         ~/.zshrc
-
-# vundle
-git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-
-#plug for nvim
-curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-# Downloads
-wget -O ~/Downloads/iTerm.zip https://iterm2.com/downloads/stable/latest
