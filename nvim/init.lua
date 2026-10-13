@@ -105,7 +105,8 @@ vim.keymap.set("x", "<leader>p", [["_dP]])
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+Y]])
 
-vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
+-- Normal-mode <leader>d is :BSymbols (lua/plugins/fzf.lua)
+vim.keymap.set("v", "<leader>d", [["_d]])
 
 u.nmap("<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
 u.nmap("<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
