@@ -241,23 +241,6 @@ require("lazy").setup({
           "bashls",
           "dockerls",
         },
-        handlers = {
-          function(server_name)
-            vim.lsp.config[server_name].setup({
-              capabilities = require("cmp_nvim_lsp").default_capabilities(),
-              on_attach = function(_, bufnr)
-                -- Enable LSP keybindings
-                local opts = { noremap = true, silent = true, buffer = bufnr }
-                vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-                vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-                vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-                vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-                vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-                vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
-              end,
-            })
-          end,
-        },
       })
       require("mason-tool-installer").setup({
         ensure_installed = {
@@ -282,17 +265,6 @@ require("lazy").setup({
     },
     config = function()
       require("plugins.copilot")
-    end,
-  },
-  {
-    "pmizio/typescript-tools.nvim",
-    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
-    opt = {},
-  },
-  {
-    "zbirenbaum/copilot-cmp",
-    config = function()
-      require("copilot_cmp").setup()
     end,
   },
   {
@@ -376,7 +348,7 @@ require("lazy").setup({
         desc = "Toggle Scratch Buffer",
       },
       {
-        "<lezder>Z",
+        "<leader>Z",
         function()
           Snacks.zen()
         end,

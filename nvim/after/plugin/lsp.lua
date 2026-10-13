@@ -6,7 +6,8 @@ local on_attach = function(_, bufnr)
   vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
   vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
   vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-  vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+  -- nowait: don't wait for the built-in grn/gra/grr/gri mappings
+  vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", opts, { nowait = true }))
   vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
   vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
 end
@@ -110,14 +111,22 @@ vim.lsp.config("dockerls", {
 })
 vim.lsp.enable("dockerls")
 
+for _, server in ipairs({ "jsonls", "html", "cssls" }) do
+  vim.lsp.config(server, {
+    capabilities = capabilities,
+    on_attach = on_attach,
+  })
+  vim.lsp.enable(server)
+end
+
 cmp.setup({
   window = {
     completion = cmp.config.window.bordered(),
     documentation = cmp.config.window.bordered(),
   },
   mapping = cmp.mapping.preset.insert({
-    ["<C-k>"] = cmp.mapping.select_prev_item(cmp_select),
-    ["<C-j>"] = cmp.mapping.select_next_item(cmp_select),
+    ["<C-k>"] = cmp.mapping.select_prev_item(),
+    ["<C-j>"] = cmp.mapping.select_next_item(),
     ["<C-l>"] = cmp.mapping.confirm({ select = true }),
     -- ["<C-Space>"] = cmp.mapping.complete(),
     ["<C-u>"] = cmp.mapping.scroll_docs(-4),
@@ -126,7 +135,6 @@ cmp.setup({
     ["<S-Tab>"] = nil,
   }),
   sources = cmp.config.sources({
-    { name = "copilot" },
     { name = "buffer" },
     { name = "nvim_lsp" },
     { name = "luasnip" },
@@ -143,6 +151,4 @@ cmp.setup({
 -- Global mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 vim.keymap.set("n", "<space>e", vim.diagnostic.open_float)
-vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
 vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist)
-vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
