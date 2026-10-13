@@ -161,7 +161,7 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 				hi! FloatBorder guifg=#ae81ff guibg=#192330
 				hi! FloatTitle  guifg=#ff9e64 guibg=#192330 gui=bold
 			]])
-    elseif vim.g.colors_name and vim.g.colors_name:lower():find("catppuccin") then
+    elseif vim.g.colors_name and (vim.g.colors_name:lower():find("catppuccin") or vim.g.colors_name == "selenized") then
       vim.env.BAT_THEME = nil
     else
       vim.env.BAT_THEME = "OneHalfDark"

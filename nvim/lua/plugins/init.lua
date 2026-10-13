@@ -43,6 +43,7 @@ require("lazy").setup({
   },
   { "lifepillar/vim-solarized8", branch = "neovim" },
   { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  { "calind/selenized.nvim", priority = 1000 },
   -- Follows the macOS appearance live, like Ghostty and herdr.
   {
     "f-person/auto-dark-mode.nvim",
@@ -53,7 +54,7 @@ require("lazy").setup({
       end,
       set_light_mode = function()
         vim.o.background = "light"
-        vim.cmd.colorscheme("solarized8")
+        vim.cmd.colorscheme("selenized")
       end,
       update_interval = 3000,
     },

@@ -5,5 +5,5 @@ if vim.fn.system({ "defaults", "read", "-g", "AppleInterfaceStyle" }):match("Dar
   vim.cmd.colorscheme("catppuccin-macchiato")
 else
   vim.o.background = "light"
-  vim.cmd.colorscheme("solarized8")
+  vim.cmd.colorscheme("selenized")
 end
