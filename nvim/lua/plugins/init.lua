@@ -33,17 +33,10 @@ require("lazy").setup({
   },
 
   "google/vim-searchindex",
-  "yggdroot/indentline",
   "christoomey/vim-tmux-navigator",
   "jszakmeister/vim-togglecursor",
   "godlygeek/tabular",
 
-  {
-    "scrooloose/nerdcommenter",
-    init = function()
-      vim.g.NERDSpaceDelims = 1
-    end,
-  },
   {
     "EdenEast/nightfox.nvim",
     priority = 1000,
@@ -65,9 +58,6 @@ require("lazy").setup({
       update_interval = 3000,
     },
   },
-  "rebelot/kanagawa.nvim",
-  "morhetz/gruvbox",
-  "Shatur/neovim-ayu",
 
   {
     "tamago324/lir.nvim",
@@ -76,7 +66,6 @@ require("lazy").setup({
   {
     "ibhagwan/fzf-lua",
     dependencies = {
-      "vijaymarupudi/nvim-fzf",
       "kyazdani42/nvim-web-devicons",
     },
     config = function()
@@ -184,7 +173,6 @@ require("lazy").setup({
       },
     },
   },
-  "RRethy/nvim-treesitter-endwise",
   { "JoosepAlviste/nvim-ts-context-commentstring", ft = { "typescript", "typescriptreact" } },
 
   -- LSP plugins
