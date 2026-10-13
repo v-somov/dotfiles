@@ -105,12 +105,19 @@ vim.keymap.set("x", "<leader>p", [["_dP]])
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+Y]])
 
-vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
+-- Normal-mode <leader>d is :BSymbols (lua/plugins/fzf.lua)
+vim.keymap.set("v", "<leader>d", [["_d]])
 
 u.nmap("<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
 u.nmap("<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 
-vim.keymap.set("n", "<C-s>", vim.lsp.buf.format)
+vim.keymap.set("n", "<C-s>", function()
+  require("conform").format({ lsp_format = "fallback" })
+end)
+
+-- NERDCommenter's toggle key, on top of the built-in gc/gcc
+vim.keymap.set("n", "<leader>c<space>", "gcc", { remap = true, desc = "Toggle comment" })
+vim.keymap.set("x", "<leader>c<space>", "gc", { remap = true, desc = "Toggle comment" })
 
 u.nmap("<C-k>", "<cmd>cnext<CR>zz")
 u.nmap("<C-j>", "<cmd>cprev<CR>zz")
@@ -124,8 +131,6 @@ require("plugins")
 require("theme")
 
 u.nmap(",r<CR>", "*:%s///g<left><left>")
-u.nmap("<Leader>rc<CR>", "*:%s///gc<left><left><left>")
-u.nmap("<Leader>gn<CR>", "*:%s///gn<CR>")
 
 u.nmap("<leader>rg", ":FzfLua live_grep <C-R><C-W><CR>")
 u.vmap("<leader>rg", 'y:FzfLua live_grep <C-R>"<CR>')
@@ -141,6 +146,7 @@ u.nmap("p", "p`]", { silent = true })
 u.augroup("TypescriptFiletypes", "BufNewFile,BufRead", "*.{ts,tsx}", "vim.opt.filetype=typescript")
 -- u.augroup("RubyFileTypes", "BufNewFile,BufRead", "pryrc", "vim.opt.filetype=ruby")
 vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("ThemeOverrides", { clear = true }),
   pattern = "*",
   callback = function()
     if vim.g.colors_name and vim.g.colors_name:lower():find("solarized") then
@@ -155,6 +161,8 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 				hi! FloatBorder guifg=#ae81ff guibg=#192330
 				hi! FloatTitle  guifg=#ff9e64 guibg=#192330 gui=bold
 			]])
+    elseif vim.g.colors_name and (vim.g.colors_name:lower():find("catppuccin") or vim.g.colors_name == "selenized") then
+      vim.env.BAT_THEME = nil
     else
       vim.env.BAT_THEME = "OneHalfDark"
       vim.cmd([[hi! CursorLine guibg=#2e2e2e]])
