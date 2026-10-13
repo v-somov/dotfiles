@@ -117,30 +117,11 @@ require("lazy").setup({
   -- Treesitter plugins
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "main",
+    lazy = false, -- main branch does not support lazy-loading
     build = ":TSUpdate",
-    event = { "VeryLazy" },
-    lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
-    init = function(plugin)
-      -- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
-      -- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which
-      -- no longer trigger the **nvim-treesitter** module to be loaded in time.
-      -- Luckily, the only things that those plugins need are the custom queries, which we make available
-      -- during startup.
-      require("lazy.core.loader").add_to_rtp(plugin)
-      require("nvim-treesitter.query_predicates")
-    end,
-    cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
-    keys = {
-      { "<c-space>", desc = "Increment Selection" },
-      { "<bs>", desc = "Decrement Selection", mode = "x" },
-    },
-    opts_extend = { "ensure_installed" },
-    ---@type TSConfig
-    ---@diagnostic disable-next-line: missing-fields
-    opts = {
-      highlight = { enable = true },
-      indent = { enable = true },
-      ensure_installed = {
+    config = function()
+      require("nvim-treesitter").install({
         "bash",
         "c",
         "diff",
@@ -150,7 +131,6 @@ require("lazy").setup({
         "javascript",
         "jsdoc",
         "json",
-        "jsonc",
         "lua",
         "luadoc",
         "luap",
@@ -169,43 +149,26 @@ require("lazy").setup({
         "yaml",
         "embedded_template",
         "go",
-      },
-      endwise = {
-        enable = true,
-      },
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = "<C-space>",
-          node_incremental = "<C-space>",
-          scope_incremental = false,
-          node_decremental = "<bs>",
-        },
-      },
-      textobjects = {
-        move = {
-          enable = true,
-          goto_next_start = {
-            ["]f"] = "@function.outer",
-            ["]c"] = "@class.outer",
-            ["]a"] = "@parameter.inner",
-          },
-          goto_next_end = { ["]F"] = "@function.outer", ["]C"] = "@class.outer", ["]A"] = "@parameter.inner" },
-          goto_previous_start = {
-            ["[f"] = "@function.outer",
-            ["[c"] = "@class.outer",
-            ["[a"] = "@parameter.inner",
-          },
-          goto_previous_end = {
-            ["[F"] = "@function.outer",
-            ["[C"] = "@class.outer",
-            ["[A"] = "@parameter.inner",
-          },
-        },
-      },
-    },
-    config = function(_, opts)
-      require("nvim-treesitter.configs").setup(opts)
+      })
+      vim.treesitter.language.register("json", "jsonc")
+
+      -- Highlighting and indentation for every filetype with an installed parser
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function(ev)
+          if not pcall(vim.treesitter.start, ev.buf) then
+            return
+          end
+          vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end,
+      })
+
+      -- Incremental selection (built into Neovim 0.12)
+      vim.keymap.set({ "n", "x" }, "<C-space>", function()
+        vim.treesitter.select("parent", vim.v.count1)
+      end, { desc = "Increment Selection" })
+      vim.keymap.set("x", "<bs>", function()
+        vim.treesitter.select("child", vim.v.count1)
+      end, { desc = "Decrement Selection" })
     end,
   },
   {
@@ -222,7 +185,6 @@ require("lazy").setup({
     },
   },
   "RRethy/nvim-treesitter-endwise",
-  { "RRethy/nvim-treesitter-textsubjects", ft = { "lua", "typescript", "typescriptreact", "ruby", "eruby" } },
   { "JoosepAlviste/nvim-ts-context-commentstring", ft = { "typescript", "typescriptreact" } },
 
   -- LSP plugins
