@@ -150,5 +150,5 @@ cmp.setup({
 
 -- Global mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-vim.keymap.set("n", "<space>e", vim.diagnostic.open_float)
+-- Diagnostic float: built-in <C-w>d (<leader>e is the Snacks explorer)
 vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist)
