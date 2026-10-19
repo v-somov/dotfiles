@@ -142,13 +142,20 @@ require("lazy").setup({
       })
       vim.treesitter.language.register("json", "jsonc")
 
-      -- Highlighting and indentation for every filetype with an installed parser
+      -- Highlighting and indentation for every filetype with an installed parser.
+      -- Ruby keeps the built-in indenter: treesitter indents incomplete code (a def without its end yet) to column 0.
+      -- The built-in Ruby indenter reads regex syntax groups, so keep regex syntax on next to treesitter.
+      local builtin_indent = { ruby = true }
       vim.api.nvim_create_autocmd("FileType", {
         callback = function(ev)
           if not pcall(vim.treesitter.start, ev.buf) then
             return
           end
-          vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          if builtin_indent[ev.match] then
+            vim.bo[ev.buf].syntax = "ON"
+          else
+            vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end
         end,
       })
 
