@@ -1,0 +1,5 @@
+# Light/dark from the macOS appearance, like Ghostty, herdr and delta-auto.
+# Detecting the terminal's colours doesn't work through herdr.
+--theme=auto:system
+--theme-light="Solarized (light)"
+--theme-dark="OneHalfDark"

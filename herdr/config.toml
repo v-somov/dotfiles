@@ -3,7 +3,7 @@ onboarding = false
 [theme]
 auto_switch = true
 light_name = "solarized-light"
-dark_name = "solarized"
+dark_name = "catppuccin"
 
 [ui]
 agent_panel_sort = "spaces"
@@ -23,7 +23,7 @@ enabled = true
 row_gap = 0
 
 [ui.sidebar.agents.rows_by_agent]
-claude = [["state_icon", "workspace", "$feature"], ["$task"], ["$branch", "agent"]]
+claude = [["state_icon", "workspace", "$feature"], ["$task"], ["$branch", "agent", "$account"]]
 
 # Direct (prefix-less) chords use alt: ctrl+hjkl is consumed by tmux's
 # vim-navigator bindings and never reaches herdr.
@@ -31,9 +31,13 @@ claude = [["state_icon", "workspace", "$feature"], ["$task"], ["$branch", "agent
 focus_agent = "alt+1..9"
 next_agent = "alt+j"
 previous_agent = "alt+k"
+focus_pane_left = ["prefix+h", "alt+h"]
+focus_pane_right = ["prefix+l", "alt+l"]
+close_pane = ["prefix+x", "alt+x"]
 open_notification_target = "alt+o"
-zoom = "alt+z"
+zoom = "alt+f"
 new_tab = "alt+t"
+switch_tab = ["prefix+1..9", "ctrl+1..9"]
 
 split_vertical = "prefix+backslash"
 split_horizontal = "prefix+minus"
@@ -56,11 +60,29 @@ height = "80%"
 # herdr runs [[keys.command]] entries without an interactive shell, so a zsh
 # alias or function is not visible here. Commands are resolved from PATH, so
 # these name scripts that `install` symlinks into ~/.local/bin.
-# claude-account picks the account from the pane's cwd, then execs claude.
+# herdr-claude-tab opens a new tab and runs claude-account in it; there is no
+# type = "tab", so it is a detached shell command that drives the socket API.
 [[keys.command]]
 key = "alt+c"
+type = "shell"
+command = "herdr-claude-tab"
+
+# Explicit account regardless of cwd; both route through claude-account.
+[[keys.command]]
+key = "alt+w"
 type = "pane"
-command = "claude-account"
+command = "claude-work"
+
+[[keys.command]]
+key = "alt+shift+p"
+type = "pane"
+command = "claude-personal"
+
+# Current folder in nvim; the temporary pane follows the focused pane's cwd.
+[[keys.command]]
+key = "alt+e"
+type = "pane"
+command = "nvim ."
 
 [[keys.command]]
 key = "alt+a"

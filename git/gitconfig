@@ -46,6 +46,15 @@
 [core]
 	excludesfile = $HOME/.gitignore_global
 	editor = nvim
+	pager = delta-auto
+[interactive]
+	diffFilter = delta-auto --color-only
+[delta]
+	# n/N jump between files in a diff. Light/dark comes from delta-auto.
+	navigate = true
+	line-numbers = true
+[merge]
+	conflictStyle = zdiff3
 [difftool "fugitive"]
   cmd = vimdiff $LOCAL $MERGED $REMOTE
   trustExitCode = false
