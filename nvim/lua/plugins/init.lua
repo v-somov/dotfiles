@@ -245,15 +245,14 @@ require("lazy").setup({
     end,
   },
 
-  { "github/copilot.vim" },
   {
-    "CopilotC-Nvim/CopilotChat.nvim",
-    dependencies = {
-      "github/copilot.vim",
-      "nvim-lua/plenary.nvim",
-    },
+    "github/copilot.vim",
     config = function()
-      require("plugins.copilot")
+      vim.keymap.set("i", "<C-j>", 'copilot#Accept("\\<CR>")', {
+        expr = true,
+        replace_keycodes = false,
+        desc = "Accept Copilot suggestion",
+      })
     end,
   },
   {
