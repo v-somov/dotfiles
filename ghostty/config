@@ -1,0 +1,42 @@
+# Ported from alacritty.toml
+
+font-family = JetBrainsMono Nerd Font Mono
+font-size = 14
+font-thicken = true
+adjust-cell-height = 10%
+# Literal characters (no != -> ≠ ligatures) so diffs show exactly what's in the file.
+font-feature = -calt
+
+# Follows macOS appearance; herdr's theme auto_switch does the same.
+# Light: Selenized (herdr solarized-light). Dark: Catppuccin Macchiato (herdr catppuccin).
+theme = light:Selenized Light,dark:Catppuccin Macchiato
+minimum-contrast = 3
+
+# Hidden titlebar keeps rounded corners and edge resizing, unlike decoration = none.
+macos-titlebar-style = hidden
+macos-option-as-alt = true
+window-padding-x = 8
+window-padding-y = 6
+window-padding-balance = true
+# Fill padding with the edge cell's colour so herdr's darker sidebar has no frame.
+window-padding-color = extend
+window-save-state = always
+
+# Steady block cursor; shell integration would otherwise switch it to a bar at the prompt.
+cursor-style = block
+cursor-style-blink = false
+shell-integration-features = no-cursor
+
+mouse-hide-while-typing = true
+copy-on-select = clipboard
+
+# herdr keeps sessions alive, so closing a window loses nothing.
+confirm-close-surface = false
+
+# Newline in Claude Code instead of submit.
+keybind = shift+enter=text:\x1b\r
+
+# Drop-down terminal from any app (needs Accessibility permission).
+keybind = global:ctrl+backquote=toggle_quick_terminal
+quick-terminal-position = top
+quick-terminal-animation-duration = 0.15

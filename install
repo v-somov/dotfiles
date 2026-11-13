@@ -21,7 +21,14 @@ ln -sf ~/dotfiles/hammerspoon     ~/.hammerspoon
 ln -sf ~/dotfiles/vimconfig/vimrc   ~/.vimrc
 ln -sf ~/dotfiles/vimconfig/vim     ~/.vim
 ln -sf ~/dotfiles/vimconfig/xvimrc  ~/.xvimrc
-ln -sf ~/dotfiles/nvim/init.vim     ~/.config/nvim/init.vim
+mkdir -p ~/.config
+ln -sfn ~/dotfiles/nvim             ~/.config/nvim
+
+mkdir -p ~/.config/ghostty
+ln -sf ~/dotfiles/ghostty/config     ~/.config/ghostty/config
+
+mkdir -p ~/.config/bat
+ln -sf ~/dotfiles/bat/config         ~/.config/bat/config
 
 mkdir -p ~/.config/herdr
 ln -sf ~/dotfiles/herdr/config.toml ~/.config/herdr/config.toml
@@ -31,15 +38,9 @@ ln -sfn ~/dotfiles/herdr/scripts    ~/.config/herdr/scripts
 mkdir -p ~/.local/bin
 ln -sf ~/dotfiles/herdr/scripts/claude-account.sh ~/.local/bin/claude-account
 ln -sf ~/dotfiles/herdr/scripts/agent-switch.sh   ~/.local/bin/herdr-agent-switch
+ln -sf ~/dotfiles/herdr/scripts/claude-work.sh     ~/.local/bin/claude-work
+ln -sf ~/dotfiles/herdr/scripts/claude-personal.sh ~/.local/bin/claude-personal
+ln -sf ~/dotfiles/herdr/scripts/claude-tab.sh      ~/.local/bin/herdr-claude-tab
+ln -sf ~/dotfiles/git/delta-auto.sh                ~/.local/bin/delta-auto
 
 ln -sf ~/dotfiles/zsh/zshrc         ~/.zshrc
-
-# vundle
-git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-
-#plug for nvim
-curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-# Downloads
-wget -O ~/Downloads/iTerm.zip https://iterm2.com/downloads/stable/latest

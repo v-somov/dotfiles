@@ -33,26 +33,32 @@ require("lazy").setup({
   },
 
   "google/vim-searchindex",
-  "yggdroot/indentline",
   "christoomey/vim-tmux-navigator",
   "jszakmeister/vim-togglecursor",
   "godlygeek/tabular",
 
-  {
-    "scrooloose/nerdcommenter",
-    init = function()
-      vim.g.NERDSpaceDelims = 1
-    end,
-  },
   {
     "EdenEast/nightfox.nvim",
     priority = 1000,
   },
   { "lifepillar/vim-solarized8", branch = "neovim" },
   { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-  "rebelot/kanagawa.nvim",
-  "morhetz/gruvbox",
-  "Shatur/neovim-ayu",
+  { "calind/selenized.nvim", priority = 1000 },
+  -- Follows the macOS appearance live, like Ghostty and herdr.
+  {
+    "f-person/auto-dark-mode.nvim",
+    opts = {
+      set_dark_mode = function()
+        vim.o.background = "dark"
+        vim.cmd.colorscheme("catppuccin-macchiato")
+      end,
+      set_light_mode = function()
+        vim.o.background = "light"
+        vim.cmd.colorscheme("selenized")
+      end,
+      update_interval = 3000,
+    },
+  },
 
   {
     "tamago324/lir.nvim",
@@ -61,7 +67,6 @@ require("lazy").setup({
   {
     "ibhagwan/fzf-lua",
     dependencies = {
-      "vijaymarupudi/nvim-fzf",
       "kyazdani42/nvim-web-devicons",
     },
     config = function()
@@ -102,30 +107,11 @@ require("lazy").setup({
   -- Treesitter plugins
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "main",
+    lazy = false, -- main branch does not support lazy-loading
     build = ":TSUpdate",
-    event = { "VeryLazy" },
-    lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
-    init = function(plugin)
-      -- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
-      -- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which
-      -- no longer trigger the **nvim-treesitter** module to be loaded in time.
-      -- Luckily, the only things that those plugins need are the custom queries, which we make available
-      -- during startup.
-      require("lazy.core.loader").add_to_rtp(plugin)
-      require("nvim-treesitter.query_predicates")
-    end,
-    cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
-    keys = {
-      { "<c-space>", desc = "Increment Selection" },
-      { "<bs>", desc = "Decrement Selection", mode = "x" },
-    },
-    opts_extend = { "ensure_installed" },
-    ---@type TSConfig
-    ---@diagnostic disable-next-line: missing-fields
-    opts = {
-      highlight = { enable = true },
-      indent = { enable = true },
-      ensure_installed = {
+    config = function()
+      require("nvim-treesitter").install({
         "bash",
         "c",
         "diff",
@@ -135,7 +121,6 @@ require("lazy").setup({
         "javascript",
         "jsdoc",
         "json",
-        "jsonc",
         "lua",
         "luadoc",
         "luap",
@@ -154,43 +139,33 @@ require("lazy").setup({
         "yaml",
         "embedded_template",
         "go",
-      },
-      endwise = {
-        enable = true,
-      },
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = "<C-space>",
-          node_incremental = "<C-space>",
-          scope_incremental = false,
-          node_decremental = "<bs>",
-        },
-      },
-      textobjects = {
-        move = {
-          enable = true,
-          goto_next_start = {
-            ["]f"] = "@function.outer",
-            ["]c"] = "@class.outer",
-            ["]a"] = "@parameter.inner",
-          },
-          goto_next_end = { ["]F"] = "@function.outer", ["]C"] = "@class.outer", ["]A"] = "@parameter.inner" },
-          goto_previous_start = {
-            ["[f"] = "@function.outer",
-            ["[c"] = "@class.outer",
-            ["[a"] = "@parameter.inner",
-          },
-          goto_previous_end = {
-            ["[F"] = "@function.outer",
-            ["[C"] = "@class.outer",
-            ["[A"] = "@parameter.inner",
-          },
-        },
-      },
-    },
-    config = function(_, opts)
-      require("nvim-treesitter.configs").setup(opts)
+      })
+      vim.treesitter.language.register("json", "jsonc")
+
+      -- Highlighting and indentation for every filetype with an installed parser.
+      -- Ruby keeps the built-in indenter: treesitter indents incomplete code (a def without its end yet) to column 0.
+      -- The built-in Ruby indenter reads regex syntax groups, so keep regex syntax on next to treesitter.
+      local builtin_indent = { ruby = true }
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function(ev)
+          if not pcall(vim.treesitter.start, ev.buf) then
+            return
+          end
+          if builtin_indent[ev.match] then
+            vim.bo[ev.buf].syntax = "ON"
+          else
+            vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end
+        end,
+      })
+
+      -- Incremental selection (built into Neovim 0.12)
+      vim.keymap.set({ "n", "x" }, "<C-space>", function()
+        vim.treesitter.select("parent", vim.v.count1)
+      end, { desc = "Increment Selection" })
+      vim.keymap.set("x", "<bs>", function()
+        vim.treesitter.select("child", vim.v.count1)
+      end, { desc = "Decrement Selection" })
     end,
   },
   {
@@ -206,8 +181,6 @@ require("lazy").setup({
       },
     },
   },
-  "RRethy/nvim-treesitter-endwise",
-  { "RRethy/nvim-treesitter-textsubjects", ft = { "lua", "typescript", "typescriptreact", "ruby", "eruby" } },
   { "JoosepAlviste/nvim-ts-context-commentstring", ft = { "typescript", "typescriptreact" } },
 
   -- LSP plugins
@@ -264,23 +237,6 @@ require("lazy").setup({
           "bashls",
           "dockerls",
         },
-        handlers = {
-          function(server_name)
-            vim.lsp.config[server_name].setup({
-              capabilities = require("cmp_nvim_lsp").default_capabilities(),
-              on_attach = function(_, bufnr)
-                -- Enable LSP keybindings
-                local opts = { noremap = true, silent = true, buffer = bufnr }
-                vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-                vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-                vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-                vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-                vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-                vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
-              end,
-            })
-          end,
-        },
       })
       require("mason-tool-installer").setup({
         ensure_installed = {
@@ -296,26 +252,14 @@ require("lazy").setup({
     end,
   },
 
-  { "github/copilot.vim" },
   {
-    "CopilotC-Nvim/CopilotChat.nvim",
-    dependencies = {
-      "github/copilot.vim",
-      "nvim-lua/plenary.nvim",
-    },
+    "github/copilot.vim",
     config = function()
-      require("plugins.copilot")
-    end,
-  },
-  {
-    "pmizio/typescript-tools.nvim",
-    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
-    opt = {},
-  },
-  {
-    "zbirenbaum/copilot-cmp",
-    config = function()
-      require("copilot_cmp").setup()
+      vim.keymap.set("i", "<C-j>", 'copilot#Accept("\\<CR>")', {
+        expr = true,
+        replace_keycodes = false,
+        desc = "Accept Copilot suggestion",
+      })
     end,
   },
   {
@@ -399,7 +343,7 @@ require("lazy").setup({
         desc = "Toggle Scratch Buffer",
       },
       {
-        "<lezder>Z",
+        "<leader>Z",
         function()
           Snacks.zen()
         end,
@@ -434,20 +378,6 @@ require("lazy").setup({
         desc = "Smart Find Files",
       },
       {
-        "<leader>,",
-        function()
-          Snacks.picker.buffers()
-        end,
-        desc = "Buffers",
-      },
-      {
-        "<leader>/",
-        function()
-          Snacks.picker.grep()
-        end,
-        desc = "Grep",
-      },
-      {
         "<leader>:",
         function()
           Snacks.picker.command_history()
@@ -470,55 +400,13 @@ require("lazy").setup({
       },
       -- find
       {
-        "<leader>fb",
-        function()
-          Snacks.picker.buffers()
-        end,
-        desc = "Buffers",
-      },
-      {
-        "<leader>fc",
-        function()
-          Snacks.picker.files({ cwd = vim.fn.stdpath("config") })
-        end,
-        desc = "Find Config File",
-      },
-      {
-        "<leader>ff",
-        function()
-          Snacks.picker.files()
-        end,
-        desc = "Find Files",
-      },
-      {
-        "<leader>fg",
-        function()
-          Snacks.picker.git_files()
-        end,
-        desc = "Find Git Files",
-      },
-      {
         "<leader>fp",
         function()
           Snacks.picker.projects()
         end,
         desc = "Projects",
       },
-      {
-        "<leader>fr",
-        function()
-          Snacks.picker.recent()
-        end,
-        desc = "Recent",
-      },
       -- git
-      {
-        "<leader>gb",
-        function()
-          Snacks.picker.git_branches()
-        end,
-        desc = "Git Branches",
-      },
       {
         "<leader>gl",
         function()
@@ -548,13 +436,6 @@ require("lazy").setup({
         desc = "Git Stash",
       },
       {
-        "<leader>gd",
-        function()
-          Snacks.picker.git_diff()
-        end,
-        desc = "Git Diff (Hunks)",
-      },
-      {
         "<leader>gf",
         function()
           Snacks.picker.git_log_file()
@@ -563,33 +444,11 @@ require("lazy").setup({
       },
       -- Grep
       {
-        "<leader>sb",
-        function()
-          Snacks.picker.lines()
-        end,
-        desc = "Buffer Lines",
-      },
-      {
         "<leader>sB",
         function()
           Snacks.picker.grep_buffers()
         end,
         desc = "Grep Open Buffers",
-      },
-      {
-        "<leader>sg",
-        function()
-          Snacks.picker.grep()
-        end,
-        desc = "Grep",
-      },
-      {
-        "<leader>sw",
-        function()
-          Snacks.picker.grep_word()
-        end,
-        desc = "Visual selection or word",
-        mode = { "n", "x" },
       },
       -- search
       {
@@ -614,27 +473,6 @@ require("lazy").setup({
         desc = "Autocmds",
       },
       {
-        "<leader>sb",
-        function()
-          Snacks.picker.lines()
-        end,
-        desc = "Buffer Lines",
-      },
-      {
-        "<leader>sc",
-        function()
-          Snacks.picker.command_history()
-        end,
-        desc = "Command History",
-      },
-      {
-        "<leader>sC",
-        function()
-          Snacks.picker.commands()
-        end,
-        desc = "Commands",
-      },
-      {
         "<leader>sd",
         function()
           Snacks.picker.diagnostics()
@@ -647,13 +485,6 @@ require("lazy").setup({
           Snacks.picker.diagnostics_buffer()
         end,
         desc = "Buffer Diagnostics",
-      },
-      {
-        "<leader>sh",
-        function()
-          Snacks.picker.help()
-        end,
-        desc = "Help Pages",
       },
       {
         "<leader>sH",
@@ -684,20 +515,6 @@ require("lazy").setup({
         desc = "Keymaps",
       },
       {
-        "<leader>sl",
-        function()
-          Snacks.picker.loclist()
-        end,
-        desc = "Location List",
-      },
-      {
-        "<leader>sm",
-        function()
-          Snacks.picker.marks()
-        end,
-        desc = "Marks",
-      },
-      {
         "<leader>sM",
         function()
           Snacks.picker.man()
@@ -705,32 +522,11 @@ require("lazy").setup({
         desc = "Man Pages",
       },
       {
-        "<leader>sp",
-        function()
-          Snacks.picker.lazy()
-        end,
-        desc = "Search for Plugin Spec",
-      },
-      {
-        "<leader>sq",
-        function()
-          Snacks.picker.qflist()
-        end,
-        desc = "Quickfix List",
-      },
-      {
         "<leader>sR",
         function()
           Snacks.picker.resume()
         end,
         desc = "Resume",
-      },
-      {
-        "<leader>su",
-        function()
-          Snacks.picker.undo()
-        end,
-        desc = "Undo History",
       },
       {
         "<leader>uC",
@@ -741,49 +537,6 @@ require("lazy").setup({
       },
       -- LSP
       {
-        "gd",
-        function()
-          Snacks.picker.lsp_definitions()
-        end,
-        desc = "Goto Definition",
-      },
-      {
-        "gD",
-        function()
-          Snacks.picker.lsp_declarations()
-        end,
-        desc = "Goto Declaration",
-      },
-      {
-        "gr",
-        function()
-          Snacks.picker.lsp_references()
-        end,
-        nowait = true,
-        desc = "References",
-      },
-      {
-        "gI",
-        function()
-          Snacks.picker.lsp_implementations()
-        end,
-        desc = "Goto Implementation",
-      },
-      {
-        "gy",
-        function()
-          Snacks.picker.lsp_type_definitions()
-        end,
-        desc = "Goto T[y]pe Definition",
-      },
-      {
-        "<leader>ss",
-        function()
-          Snacks.picker.lsp_symbols()
-        end,
-        desc = "LSP Symbols",
-      },
-      {
         "<leader>sS",
         function()
           Snacks.picker.lsp_workspace_symbols()
@@ -792,10 +545,22 @@ require("lazy").setup({
       },
     },
     opts = {
-      scratch = { enable = true },
-      picker = { enable = true },
-      zen = { enable = true },
-      toggle = { enable = true },
+      scratch = { enabled = true },
+      picker = {
+        enabled = true,
+        -- Match the in-picker keys of fzf-lua
+        win = {
+          input = {
+            keys = {
+              ["<C-d>"] = { "preview_scroll_down", mode = { "i", "n" } },
+              ["<C-u>"] = { "preview_scroll_up", mode = { "i", "n" } },
+              ["<C-e>"] = { "toggle_preview", mode = { "i", "n" } },
+            },
+          },
+        },
+      },
+      zen = { enabled = true },
+      toggle = { enabled = true },
       styles = {
         scratch = {
           width = 0.6,
@@ -835,4 +600,3 @@ require("lazy").setup({
   require("plugins.lazygit"),
 })
 
-require("plugins.theme-switcher")

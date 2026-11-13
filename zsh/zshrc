@@ -5,8 +5,11 @@ export ZSH=$HOME/.oh-my-zsh
 export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 
 export JAVA_HOME="$(brew --prefix openjdk)/libexec/openjdk.jdk/Contents/Home"
-plugins=(git asdf ruby z last-working-dir wd vi-mode fzf-tab gh aliases)
+plugins=(git asdf ruby last-working-dir wd vi-mode fzf-tab gh aliases)
 source $ZSH/oh-my-zsh.sh
+# Esc enters vi normal mode after 10ms instead of 400ms. Set after oh-my-zsh so
+# the vi-mode plugin doesn't override it.
+KEYTIMEOUT=1
 unalias gsd
 
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
@@ -18,48 +21,18 @@ export PATH="$HOME/.local/bin:$PATH"
 
 export EDITOR='nvim'
 
- _gen_fzf_default_opts() {
-  local base03="234"
-  local base02="235"
-  local base01="240"
-  local base00="241"
-  local base0="244"
-  local base1="245"
-  local base2="254"
-  local base3="230"
-  local yellow="136"
-  local orange="166"
-  local red="160"
-  local magenta="125"
-  local violet="61"
-  local blue="33"
-  local cyan="37"
-  local green="64"
-
-  ## Comment and uncomment below for the light theme.
-
-  ## Solarized Dark color scheme for fzf
-  ##export FZF_DEFAULT_OPTS="
-    ##--color fg:-1,bg:-1,hl:$blue,fg+:$base2,bg+:$base02,hl+:$blue
-    ##--color info:$yellow,prompt:$yellow,pointer:$base3,marker:$base3,spinner:$yellow
-  ##"
-  ## Solarized Light color scheme for fzf
-  export FZF_DEFAULT_OPTS="
-   --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
-   --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
-  "
-}
-
-  # export FZF_DEFAULT_OPTS="--color=bg+:#fdf6e3,bg:#fdf6e3,spinner:#b58900,hl:#859900 --color=fg:#657b83,header:#859900,info:#268bd2,pointer:#b58900,marker:#b58900,prompt:#268bd2,hl+:#cb4b16"
-# _gen_fzf_default_opts
-# export FZF_DEFAULT_OPTS="--color=bg+:#192330,bg:#192330,spinner:#ae81ff,hl:#ae81ff --color=fg:#c0caf5,header:#ae81ff,info:#7aa2f7,pointer:#ae81ff,marker:#ae81ff,prompt:#7aa2f7,hl+:#ff9e64"
+# ANSI palette slots, so fzf follows Ghostty's light/dark theme (same style as
+# the herdr agent switcher).
+export FZF_DEFAULT_OPTS="
+  --prompt='› ' --pointer='▸' --marker='•' --info=inline-right --no-scrollbar
+  --separator='─' --highlight-line
+  --color=fg:-1,bg:-1,hl:blue:underline,fg+:-1:bold,bg+:black,hl+:blue:bold:underline
+  --color=pointer:magenta,marker:magenta,prompt:blue,query:-1:bold,info:bright-black
+  --color=header:bright-black,separator:bright-black,gutter:-1,spinner:blue
+"
+# fzf-tab ignores FZF_DEFAULT_OPTS unless told otherwise.
+zstyle ':fzf-tab:*' use-fzf-default-opts yes
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-# export FZF_DEFAULT_OPTS="--color 16,info:6,hl+:1,fg+:10"
-# export FZF_DEFAULT_OPTS="--color bg+:#283237,info:6,hl:#DEC77A,hl+:#DA797B,fg+:#81F3DC,pointer:#E64A19,spinner:#673AB7"
-# # Solarized colors
-# export FZF_DEFAULT_OPTS='
-  # --color=bw
-# '
 export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || bat {} || tree -C {}) 2> /dev/null | head -200'"
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.DS_Store,.git,dist,node_modules,tmp,vendor,venv,__pycache__}/*" 2> /dev/null'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
@@ -321,15 +294,16 @@ compinit
 # `claude` picks the account from the working directory. The rule lives in the
 # claude-account script so the herdr alt+c binding, which runs without an
 # interactive shell, applies the same one. An explicit CLAUDE_CONFIG_DIR always
-# wins, so ccw/ccp below keep working. Falls back to the plain binary on a
-# machine where `install` has not linked the script yet.
+# wins, which is what claude-work / claude-personal (ccw/ccp) rely on. Falls
+# back to the plain binary on a machine where `install` has not linked the
+# script yet.
 claude() {
   if command -v claude-account >/dev/null; then claude-account "$@"; else command claude "$@"; fi
 }
 co() { cd ~/Developer/obsidian/work && claude; }
 dcc() { cd ~/Developer && claude; }
-alias ccw='CLAUDE_CONFIG_DIR=$HOME/.claude-work claude'
-alias ccp='CLAUDE_CONFIG_DIR=$HOME claude'
+alias ccw='claude-work'
+alias ccp='claude-personal'
 
 
 # Lazygit
@@ -351,3 +325,7 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # opencode
 export PATH=$HOME/.opencode/bin:$PATH
+
+# Locale: a bare LC_CTYPE=UTF-8 from the terminal breaks Cyrillic editing
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
