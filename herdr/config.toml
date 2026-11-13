@@ -13,7 +13,7 @@ hide_tab_bar_when_single_tab = true
 prompt_new_tab_name = false
 
 [ui.toast]
-delivery = "system"
+delivery = "terminal"
 delay_seconds = 1
 
 [ui.sound]
@@ -23,7 +23,10 @@ enabled = true
 row_gap = 0
 
 [ui.sidebar.agents.rows_by_agent]
-claude = [["state_icon", "workspace", "$feature"], ["$task"], ["$branch", "agent", "$account"]]
+claude = [
+  ["state_icon", { token = "workspace", bold = true }, { token = "$feature", fg = "#89b4fa" }, { token = "$phase", fg = "#a6e3a1" }, { token = "$account", dim = true }],
+  ["terminal_title_stripped"],
+]
 
 # Direct (prefix-less) chords use alt: ctrl+hjkl is consumed by tmux's
 # vim-navigator bindings and never reaches herdr.
@@ -35,7 +38,7 @@ focus_pane_left = ["prefix+h", "alt+h"]
 focus_pane_right = ["prefix+l", "alt+l"]
 close_pane = ["prefix+x", "alt+x"]
 open_notification_target = "alt+o"
-zoom = "alt+f"
+zoom = "alt+z"
 new_tab = "alt+t"
 switch_tab = ["prefix+1..9", "ctrl+1..9"]
 
